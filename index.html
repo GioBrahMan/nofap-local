@@ -18,13 +18,14 @@
     interest-cohort=()
   " />
 
-  <!-- ✅ External CSS only -->
+  <!-- External CSS -->
   <link rel="stylesheet" href="./nofap.css" />
 </head>
 
 <body>
   <div id="appShell">
     <div class="page">
+      <!-- NAV -->
       <header class="nav" role="banner">
         <div class="nav-left" aria-label="Discipline OS">
           <div class="logo-mark" aria-hidden="true"><span>OS</span></div>
@@ -35,51 +36,89 @@
         </div>
 
         <nav class="nav-right" role="navigation" aria-label="Module navigation">
+          <div>
+            <a href="NoCorn+NoFap.html" class="is-active" aria-current="page">
+              NO FAP + NO CORN
+            </a>
+          </div>
+          <div>
+            <a href="NoSocialMedia.html">
+              HEALTHY SOCIAL MEDIA
+            </a>
+          </div>
+          <div>
+            <a href="MonkMode.html">
+              MONK MODE
+            </a>
+          </div>
 
           <div>
-            <button id="btnClearLocal" class="nav-logout" type="button" title="Clears local data for this module only">
+            <button
+              id="btnClearLocal"
+              class="nav-logout"
+              type="button"
+              title="Clears local data for this module only"
+            >
               CLEAR LOCAL DATA
             </button>
 
             <span class="tip">
-                <button class="tip__btn" type="button" aria-describedby="tip-clear" aria-label="What does Clear Local Data do?">?</button>
-                <span class="tip__bubble" id="tip-clear" role="tooltip">
-                    Clears EVERYTHING for this module on this device: identity, streak, starting day, and last check-in.
-                    This is a full wipe (like reinstalling).
-                </span>
-            </span>
+              <button
+                class="tip__btn"
+                type="button"
+                aria-describedby="tip-clear"
+                aria-label="What does Clear Local Data do?"
+              >?</button>
 
+              <span class="tip__bubble" id="tip-clear" role="tooltip">
+                Clears EVERYTHING for this module on this device:
+                identity, streak, starting day, and last check-in.
+                This is a full wipe (like reinstalling).
+              </span>
+            </span>
           </div>
         </nav>
       </header>
 
+      <!-- MAIN -->
       <main role="main">
         <section aria-labelledby="moduleTitle">
           <div class="section-label">Module 01 · NoFap + NoCorn</div>
-          <h1 class="section-heading" id="moduleTitle">NoFap + NoCorn Identity Streak</h1>
+          <h1 class="section-heading" id="moduleTitle">
+            NoFap + NoCorn Identity Streak
+          </h1>
+
           <p class="section-sub">
             Local-only version. Your data never leaves your device.
             One identity statement, typed exactly, every morning.
           </p>
 
           <div class="identity-layout">
+            <!-- LEFT -->
             <div class="identity-card" role="region" aria-label="Identity Console">
               <div class="identity-card-header">
-                <div>
-                  <div class="pill-tag"><span>Identity Console</span> · NoFap + NoCorn</div>
+                <div class="pill-tag">
+                  <span>Identity Console</span> · NoFap + NoCorn
                 </div>
               </div>
 
               <p class="identity-card-text">
-                First time here? Type an identity statement that hits home for you.
-                Every morning after that, retype it exactly and press <strong>CHECK IN</strong> to advance your streak.
+                First time here? Type an identity statement that hits home.
+                Every morning after that, retype it exactly and press
+                <strong>CHECK IN</strong> to advance your streak.
                 You can update your identity later without losing your streak.
               </p>
 
               <textarea
                 class="identity-textarea"
                 id="identityInput"
-                placeholder="Example:&#10;I am a man who no longer seeks corn.&#10;I am a man who no longer faps.&#10;From here on until I die, I will say no to corn.&#10;From here on until I die, I will be part of the no fap movement.&#10;#we never fold&#10;#say no to lust"
+                placeholder="Example:
+I am a man who no longer seeks corn.
+I am a man who no longer faps.
+From here on until I die, I will say no to corn.
+From here on until I die, I will be part of the no fap movement.
+#we never fold
+#say no to lust"
                 maxlength="2000"
                 aria-label="NoFap + NoCorn identity statement"
                 autocomplete="off"
@@ -94,7 +133,7 @@
 
               <div class="identity-hint">
                 • Press <strong>CHECK IN</strong> once each morning to log your day.<br/>
-                • Press <strong>SAVE / UPDATE IDENTITY</strong> if you wish to edit your statement — your streak will remain
+                • Press <strong>SAVE / UPDATE IDENTITY</strong> to edit without losing your streak
               </div>
 
               <div class="btn-row">
@@ -106,15 +145,20 @@
               <div id="message" class="message is-hidden" role="status" aria-live="polite"></div>
             </div>
 
+            <!-- RIGHT -->
             <aside class="streak-card" role="complementary" aria-label="Streak Panel">
               <div class="streak-top-row">
                 <div class="streak-label">Your Streak</div>
-                <div class="streak-status-pill"><span aria-hidden="true"></span>Local Mode</div>
+                <div class="streak-status-pill">
+                  <span aria-hidden="true"></span>Local Mode
+                </div>
               </div>
 
               <div class="streak-main">
                 <div class="starterBox">
-                  <div class="streak-label starterBox__label">Already have a streak?</div>
+                  <div class="streak-label starterBox__label">
+                    Already have a streak?
+                  </div>
 
                   <div class="starterBox__row">
                     <input
@@ -125,11 +169,12 @@
                       max="5000"
                       placeholder="e.g. 49"
                       inputmode="numeric"
-                      aria-label="Enter your existing streak day count"
                       autocomplete="off"
                       spellcheck="false"
                     />
-                    <button class="btn-subtle" id="setStartingDayBtn" type="button">Set</button>
+                    <button class="btn-subtle" id="setStartingDayBtn" type="button">
+                      Set
+                    </button>
                   </div>
 
                   <div class="starterBox__hint">
@@ -141,18 +186,24 @@
                   <span class="flame" aria-hidden="true">🔥</span>
                   <span id="streakDayText" class="is-loading">Day 0</span>
                 </div>
+
                 <div class="streak-caption">NoFap + NoCorn</div>
               </div>
 
               <div class="streak-identity-box">
                 <div class="streak-identity-label">Saved Identity Statement</div>
-                <div class="streak-identity-text is-loading" id="savedIdentityText">
+                <div
+                  class="streak-identity-text is-loading"
+                  id="savedIdentityText"
+                >
                   No identity saved yet. Your first check-in will lock it in.
                 </div>
               </div>
 
               <div class="streak-footer">
-                <span id="lastCheckInText" class="is-loading">Last Check-In: —</span>
+                <span id="lastCheckInText" class="is-loading">
+                  Last Check-In: —
+                </span>
                 <span>Identity is built one check-in at a time.</span>
               </div>
             </aside>
@@ -160,15 +211,18 @@
         </section>
       </main>
 
+      <!-- FOOTER -->
       <footer class="footer" role="contentinfo">
         <div class="footer-line">&gt; MODULE STATUS: ACTIVE · NOFAP + NOCORN</div>
         <div class="footer-line">MODE: <span id="userState">LOCAL</span></div>
-        <div class="footer-line">© <span id="yearNow"></span> Discipline OS · Life Operating System</div>
+        <div class="footer-line">
+          © <span id="yearNow"></span> Discipline OS · Life Operating System
+        </div>
       </footer>
     </div>
   </div>
 
-  <!-- External JS only -->
+  <!-- External JS -->
   <script src="./nofap.js"></script>
 </body>
 </html>
