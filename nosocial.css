@@ -507,3 +507,80 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   .nav{ flex-direction:column; align-items:flex-start; gap:10px; padding-bottom:14px; }
   .page{ padding-inline:16px; }
 }
+
+/* Tooltip (same behavior as NoFap module) */
+.tip{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.tip__btn{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: var(--muted);
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.tip__btn:hover{
+  color: var(--ink);
+  border-color: rgba(255,255,255,0.32);
+}
+
+.tip__bubble{
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(360px, 80vw);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.92);
+  color: rgba(245,245,247,0.92);
+  font-size: 11px;
+  line-height: 1.6;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.85);
+  z-index: 50;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.tip__bubble::before{
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  background: rgba(0,0,0,0.92);
+  border-left: 1px solid rgba(255,255,255,0.18);
+  border-top: 1px solid rgba(255,255,255,0.18);
+  transform: rotate(45deg);
+}
+
+/* Show on hover OR keyboard focus */
+.tip:hover .tip__bubble,
+.tip__btn:focus + .tip__bubble,
+.tip__btn:focus-visible + .tip__bubble{
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Make focus look good */
+.tip__btn:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.35);
+  outline-offset: 2px;
+}
