@@ -1,0 +1,145 @@
+<!-- NoSocialMedia.html (LOCAL ONLY) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Discipline OS — Healthy Social Media Usage Module</title>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="./nosocial.css" />
+</head>
+
+<body>
+  <div class="page">
+    <header class="nav" role="banner">
+      <a class="nav-left" href="index.html" aria-label="Back to Home">
+        <div class="logo-mark" aria-hidden="true"><span>OS</span></div>
+        <div class="logo-text">
+          <div class="logo-title">Discipline OS</div>
+          <div class="logo-sub">Life Operating System</div>
+        </div>
+      </a>
+
+      <nav class="nav-right" role="navigation" aria-label="Module navigation">
+        <div><a href="NoCorn+NoFap.html">NO FAP + NO CORN</a></div>
+        <div><a href="NoSocialMedia.html" class="is-active" aria-current="page">HEALTHY SOCIAL MEDIA USAGE</a></div>
+        <div><a href="MonkMode.html">MONK MODE</a></div>
+      </nav>
+    </header>
+
+    <main role="main">
+      <section>
+        <div class="section-label">Module 02 · Healthy Social Media Usage</div>
+        <h1 class="section-heading">Healthy Social Media Usage Identity Streak</h1>
+        <p class="section-sub">
+          Local-only version. Your data never leaves your device.
+          Choose creators intentionally and set boundaries for your attention.
+        </p>
+
+        <div class="identity-layout">
+          <div class="identity-card" role="region" aria-label="Identity Console">
+            <div class="identity-card-header">
+              <div class="pill-tag"><span>Identity Console</span> · Healthy Social Media Usage</div>
+            </div>
+
+            <p class="identity-card-text">
+              Start by listing the content creators you genuinely enjoy watching or that add value to your life.
+              Being intentional about who you watch reduces mindless scrolling.
+              The rule is simple: 10 minutes a day. No more. No less.
+            </p>
+
+            <div class="soft-divider"></div>
+            <div class="identity-meta">Content creators you choose to watch</div>
+            <textarea
+              class="identity-textarea"
+              id="sitesInput"
+              autocomplete="off"
+              spellcheck="false"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="Example:&#10;Matan Even (YouTube)&#10;gioBrah (YouTube)"
+            ></textarea>
+
+            <div class="soft-divider"></div>
+            <div class="identity-meta" style="margin-top:4px;">
+              Identity Statement (10 minutes a day. No more. No less.)
+            </div>
+            <p class="identity-card-text" style="margin-top:6px;">
+              Write one identity statement that explains why you choose to intentionally use social media and how you will do it.
+            </p>
+            <textarea
+              class="identity-textarea"
+              id="identityInput"
+              maxlength="2000"
+              autocomplete="off"
+              autocapitalize="none"
+              spellcheck="false"
+              placeholder="Example:&#10;I use social media intentionally because life is too short to spend hours scrolling.&#10;Before opening social media, I will start a 10-minute timer.&#10;When it ends, I exit immediately.&#10;After my 10 minutes, I do not access social media until tomorrow."
+            ></textarea>
+
+            <div class="identity-meta">Type with intent. These words define how you use your attention.</div>
+
+            <div class="identity-hint">
+              • Press <strong>CHECK IN</strong> once each morning to log your day.<br />
+              • Press <strong>SAVE / UPDATE IDENTITY</strong> to update your creators list and identity — your streak stays the same.<br />
+              • Press <strong>I SLIPPED TODAY</strong> to reset your streak back to Day 0.
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-primary" id="checkInBtn" type="button">Check In</button>
+              <button class="btn-ghost" id="saveIdentityBtn" type="button">Save / Update Identity</button>
+              <button class="btn-subtle" id="slipBtn" type="button">I Slipped Today</button>
+            </div>
+
+            <div id="message" class="message is-hidden" role="status" aria-live="polite"></div>
+          </div>
+
+          <aside class="streak-card" role="complementary" aria-label="Streak Panel">
+            <div class="streak-top-row">
+              <div class="streak-label">Your Identity Streak</div>
+              <div class="streak-status-pill"><span aria-hidden="true"></span>Local Mode</div>
+            </div>
+
+            <div class="streak-main">
+              <div class="streak-day">
+                <span class="flame" aria-hidden="true">📵</span>
+                <span id="streakDayText">Day 0</span>
+              </div>
+              <div class="streak-caption">Healthy Social Media Usage</div>
+            </div>
+
+            <div class="streak-sites-box">
+              <div class="streak-sites-label">Creators you choose to watch</div>
+              <div class="streak-sites-text is-loading" id="savedSitesText">
+                No content creators listed yet. Start by naming creators you enjoy watching or that add value to your life.
+              </div>
+            </div>
+
+            <div class="streak-identity-box">
+              <div class="streak-identity-label">Saved Identity Statement</div>
+              <div class="streak-identity-text is-loading" id="savedIdentityText">
+                No identity saved yet. Your first check-in will lock it in.
+              </div>
+            </div>
+
+            <div class="streak-footer">
+              <span id="lastCheckInText">Last Check-In: —</span>
+              <span>Attention is your currency. Protect it.</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+      <div class="footer-line">&gt; MODULE STATUS: ACTIVE · HEALTHY SOCIAL MEDIA USAGE</div>
+      <div class="footer-line">MODE: LOCAL</div>
+      <div class="footer-line">© <span id="yearNow"></span> Discipline OS · Life Operating System</div>
+    </footer>
+  </div>
+
+  <!-- Local-only JS (no imports) -->
+  <script src="./nosocial.js"></script>
+</body>
+</html>
