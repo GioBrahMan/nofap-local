@@ -125,23 +125,7 @@ a:active { color: var(--ink); }
   opacity:0.85;
 }
 
-/* Nav "clear local" button */
-.nav-logout{
-  appearance:none;
-  background:transparent;
-  border:0;
-  color:var(--muted);
-  font:inherit;
-  cursor:pointer;
-  padding:0;
-  letter-spacing:inherit;
-  text-transform:inherit;
-  transition: color 0.2s ease, text-shadow 0.2s ease;
-}
-.nav-logout:hover{
-  color:var(--ink);
-  text-shadow: 0 0 6px rgba(255,255,255,0.35);
-}
+
 
 /* Logo */
 .logo-mark{
@@ -488,75 +472,6 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 }
 .footer-line{ white-space:nowrap; }
 
-/* Tooltip */
-.tip{
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  margin-left: 8px;
-}
-.tip__btn{
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(255,255,255,0.06);
-  color: var(--muted);
-  font: inherit;
-  font-size: 11px;
-  line-height: 1;
-  cursor: help;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-.tip__btn:hover{
-  color: var(--ink);
-  border-color: rgba(255,255,255,0.32);
-}
-.tip__bubble{
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 10px);
-  transform: translateX(-50%);
-  width: min(320px, 80vw);
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.18);
-  background: rgba(0,0,0,0.92);
-  color: rgba(245,245,247,0.92);
-  font-size: 11px;
-  line-height: 1.6;
-  box-shadow: 0 18px 60px rgba(0,0,0,0.85);
-  z-index: 50;
-
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-.tip__bubble::before{
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 10px;
-  height: 10px;
-  background: rgba(0,0,0,0.92);
-  border-left: 1px solid rgba(255,255,255,0.18);
-  border-top: 1px solid rgba(255,255,255,0.18);
-}
-.tip:hover .tip__bubble,
-.tip__btn:focus + .tip__bubble,
-.tip__btn:focus-visible + .tip__bubble{
-  opacity: 1;
-  visibility: visible;
-}
-.tip__btn:focus-visible{
-  outline: 2px solid rgba(255,255,255,0.35);
-  outline-offset: 2px;
-}
 
 /* Animations */
 @keyframes livePulse{
