@@ -1,4 +1,4 @@
-/* nofap.css — LOCAL-ONLY (FINAL, STABLE) */
+/* nofap.css — FINAL (RESTORED TYPOGRAPHY + FIXES) */
 
 :root{
   --bg:#050608;
@@ -80,11 +80,13 @@ body::before{
 .logo-mark span{
   font-size:12px;
   font-weight:600;
+  letter-spacing:0.08em;
 }
 
 .logo-text{
   display:flex;
   flex-direction:column;
+  gap:1px;
 }
 .logo-title{
   font-size:14px;
@@ -97,6 +99,31 @@ body::before{
   letter-spacing:0.14em;
   text-transform:uppercase;
   color:var(--muted);
+  opacity:0.9;
+}
+
+/* ================= SECTION TEXT ================= */
+
+.section-label{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:0.26em;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+
+.section-heading{
+  font-size:26px;
+  line-height:1.35;
+  letter-spacing:0.02em;
+  margin-bottom:8px;
+}
+
+.section-sub{
+  font-size:13px;
+  line-height:1.8;
+  color:var(--muted);
+  max-width:520px;
 }
 
 /* ================= LAYOUT ================= */
@@ -133,6 +160,18 @@ body::before{
 .identity-card:hover{
   transform:translateY(-2px);
   box-shadow:0 28px 90px rgba(0,0,0,0.95);
+}
+
+.identity-card h2{
+  font-size:18px;
+  font-weight:600;
+  letter-spacing:0.02em;
+}
+
+.identity-card p{
+  font-size:12px;
+  line-height:1.8;
+  color:var(--muted);
 }
 
 /* ================= STREAK CARD ================= */
@@ -186,7 +225,7 @@ body::before{
   animation:livePulse 1.8s infinite;
 }
 
-/* Set streak row (modern) */
+/* Set streak row */
 .set-streak-row{
   display:flex;
   align-items:center;
@@ -203,9 +242,6 @@ body::before{
   color:var(--ink);
   font-size:11px;
   outline:none;
-}
-.set-streak-row input::placeholder{
-  color:var(--muted);
 }
 
 /* Main streak */
@@ -224,8 +260,8 @@ body::before{
 
 .streak-caption{
   font-size:10px;
-  text-transform:uppercase;
   letter-spacing:0.16em;
+  text-transform:uppercase;
   color:var(--muted);
 }
 
@@ -236,6 +272,7 @@ body::before{
   border:1px dashed rgba(255,255,255,0.22);
   padding:8px 10px;
   font-size:11px;
+  line-height:1.7;
 }
 
 /* Footer */
