@@ -125,8 +125,6 @@ a:active { color: var(--ink); }
   opacity:0.85;
 }
 
-
-
 /* Logo */
 .logo-mark{
   width:26px;
@@ -428,8 +426,6 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 }
 .footer-line{ white-space:nowrap; }
 
-
-
 /* Animations */
 @keyframes livePulse{
   0%{ box-shadow:0 0 4px rgba(76,242,158,0.4); transform:scale(1); }
@@ -440,8 +436,28 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 /* Responsive */
 @media (max-width:900px){
   .identity-layout{ grid-template-columns:minmax(0,1fr); }
+
+  /* Mobile/stacked layout: sticky feels weird — disable */
+  .streak-card{
+    position:static;
+    top:auto;
+    max-height:none;
+  }
 }
+
 @media (max-width:680px){
   .nav{ flex-direction:column; align-items:flex-start; gap:10px; padding-bottom:14px; }
   .page{ padding-inline:16px; }
+
+  /* Nav wrap + bigger tap targets */
+  .nav-right{
+    flex-wrap:wrap;
+    gap:10px;
+    row-gap:10px;
+  }
+  .nav-right div{ padding-right:12px; }
+  .nav-right a{
+    display:inline-block;
+    padding:8px 6px;
+  }
 }
