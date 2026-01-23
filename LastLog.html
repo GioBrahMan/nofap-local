@@ -1,0 +1,143 @@
+<!-- LastLog.html (LOCAL ONLY) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Discipline OS — Last Log Module</title>
+
+  <!-- Use your existing Discipline OS CSS -->
+  <link rel="stylesheet" href="./nosocial.css" />
+</head>
+
+<body>
+  <div class="page">
+    <!-- NAV -->
+    <header class="nav" role="banner">
+      <div class="nav-left" aria-label="Discipline OS">
+        <div class="logo-mark" aria-hidden="true"><span>OS</span></div>
+        <div class="logo-text">
+          <div class="logo-title">Discipline OS</div>
+          <div class="logo-sub">Life Operating System</div>
+        </div>
+      </div>
+
+      <nav class="nav-right" role="navigation" aria-label="Module navigation">
+        <div><a href="NoCorn+NoFap.html">NO FAP + NO CORN</a></div>
+        <div><a href="NoSocialMedia.html">HEALTHY SOCIAL MEDIA</a></div>
+        <div><a href="MonkMode.html">MONK MODE</a></div>
+        <div>
+          <a href="LastLog.html" class="is-active" aria-current="page">
+            LAST LOG
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main role="main">
+      <section>
+        <div class="section-label">Module 04 · Last Log</div>
+        <h1 class="section-heading">Last Log Console</h1>
+
+        <p class="section-sub">
+          Local-only version. Your data never leaves your device.
+          Write the last time you did the things you’re cutting out.
+          The point is friction: if you relapse, you must update the log.
+        </p>
+
+        <div class="identity-layout">
+          <!-- LEFT -->
+          <div class="identity-card" role="region" aria-label="Last Log Console">
+            <div class="identity-card-header">
+              <div class="pill-tag">
+                <span>Identity Console</span> · Last Log
+              </div>
+            </div>
+
+            <p class="identity-card-text">
+              Keep it simple. Write your “last time” entries on separate lines.
+              Example format:
+              <br/><br/>
+              <span style="color:rgba(245,245,247,0.9)">
+                last fap — Jan 10, 2026<br/>
+                last movie — Dec 30, 2025<br/>
+                last junk drink — Jan 18, 2026
+              </span>
+            </p>
+
+            <div class="soft-divider"></div>
+            <div class="identity-meta">Your Last Log</div>
+
+            <textarea
+              class="identity-textarea"
+              id="lastLogInput"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Type your last-time log here (one per line).
+
+Examples:
+last fap — Jan 10, 2026
+last movie — Dec 30, 2025
+last junk drink — Jan 18, 2026
+last junk snack — Jan 20, 2026
+last doomscroll — Jan 22, 2026"
+            ></textarea>
+
+            <div class="identity-hint">
+              • Press <strong>SAVE</strong> whenever you update your “last time” entries<br/>
+              • The right side mirrors what you saved (so it feels official)<br/>
+              • If you slip, update the line. The extra effort is the point.
+            </div>
+
+            <div class="btn-row">
+              <button class="btn-primary" id="saveBtn" type="button">Save</button>
+              <button class="btn-ghost" id="templateBtn" type="button">Insert Template</button>
+              <button class="btn-subtle" id="clearBtn" type="button">Clear</button>
+            </div>
+
+            <div id="message" class="message is-hidden" role="status" aria-live="polite"></div>
+          </div>
+
+          <!-- RIGHT -->
+          <aside class="streak-card" role="complementary" aria-label="Saved Last Log">
+            <div class="streak-top-row">
+              <div class="streak-label">Saved Log</div>
+              <div class="streak-status-pill"><span></span>Local Mode</div>
+            </div>
+
+            <div class="streak-main">
+              <div class="streak-day">
+                <span class="flame">🧾</span>
+                <span id="savedTitle">Last Log</span>
+              </div>
+              <div class="streak-caption">Time since last “bad” actions</div>
+            </div>
+
+            <div class="streak-identity-box">
+              <div class="streak-identity-label">Saved Entries</div>
+              <div class="streak-identity-text is-loading" id="savedLogText">
+                No log saved yet.
+              </div>
+            </div>
+
+            <div class="streak-footer">
+              <span id="lastSavedText">Last Saved: —</span>
+              <span>Friction beats cravings.</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer-line">&gt; MODULE STATUS: ACTIVE · LAST LOG</div>
+      <div class="footer-line">MODE: LOCAL</div>
+      <div class="footer-line">© <span id="yearNow"></span> Discipline OS</div>
+    </footer>
+  </div>
+
+  <script src="./lastlog.js"></script>
+</body>
+</html>
