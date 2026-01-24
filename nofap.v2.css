@@ -417,3 +417,25 @@ body::before{
   border-color: rgba(255,255,255,0.4);
   color: var(--ink);
 }
+
+/* Hide number input spinners (Chrome/Edge/Safari) */
+.set-streak-row input[type="number"]::-webkit-outer-spin-button,
+.set-streak-row input[type="number"]::-webkit-inner-spin-button{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input spinners (Firefox) */
+.set-streak-row input[type="number"]{
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.set-streak-row input{
+  caret-color: var(--ink);
+}
+
+.set-streak-row input:-webkit-autofill{
+  -webkit-text-fill-color: var(--ink);
+  transition: background-color 9999s ease-out 0s;
+}
