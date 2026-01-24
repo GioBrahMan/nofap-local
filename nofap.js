@@ -2,7 +2,11 @@
 
 console.log("nofap.js loaded");
 
+// ===============================
+// UI ELEMENTS
+// ===============================
 const input = document.getElementById("nofapInput");
+
 const streakDayText = document.getElementById("streakDayText");
 const savedIdentityText = document.getElementById("savedIdentityText");
 const lastCheckInText = document.getElementById("lastCheckInText");
@@ -12,13 +16,18 @@ const checkInBtn = document.getElementById("checkInBtn");
 const saveBtn = document.getElementById("saveIdentityBtn");
 const resetBtn = document.getElementById("resetStreakBtn");
 
+// ===============================
+// CONSTANTS
+// ===============================
 const LS_KEY = "disciplineos_nofap_v1";
 const RATE_LIMIT_MS = 900;
 
 let isProcessing = false;
 let lastActionAt = 0;
 
-// ---------- helpers ----------
+// ===============================
+// HELPERS
+// ===============================
 function showMessage(text, type = "success") {
   if (!messageEl) return;
   messageEl.textContent = text;
@@ -35,24 +44,30 @@ function normalize(s) {
 }
 
 function todayKey() {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
+  return new Date().toISOString().slice(0, 10);
 }
 
 function timeNow() {
   return new Date().toTimeString().slice(0, 8);
 }
 
+// ===============================
+// STORAGE
+// ===============================
+function defaultState() {
+  return {
+    identity: "",
+    streak: 0,
+    lastDate: null,
+    lastTime: null,
+  };
+}
+
 function load() {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEY)) || {
-      identity: "",
-      streak: 0,
-      lastDate: null,
-      lastTime: null,
-    };
+    return JSON.parse(localStorage.getItem(LS_KEY)) || defaultState();
   } catch {
-    return { identity: "", streak: 0, lastDate: null, lastTime: null };
+    return defaultState();
   }
 }
 
@@ -60,10 +75,13 @@ function save(state) {
   localStorage.setItem(LS_KEY, JSON.stringify(state));
 }
 
-// ---------- render ----------
+// ===============================
+// RENDER (Monk Mode style)
+// ===============================
 function render(state) {
   savedIdentityText.textContent =
-    state.identity || "No identity saved yet.";
+    state.identity || "No identity saved yet. Your first check-in will lock it in.";
+  savedIdentityText.classList.remove("is-loading");
 
   streakDayText.textContent = `Day ${state.streak}`;
 
@@ -72,10 +90,12 @@ function render(state) {
     : "Last Check-In: —";
 }
 
-// ---------- guard ----------
+// ===============================
+// GUARD
+// ===============================
 async function guarded(fn) {
   const now = Date.now();
-  if (now - lastActionAt < RATE_LIMIT_MS || isProcessing) return;
+  if (isProcessing || now - lastActionAt < RATE_LIMIT_MS) return;
   lastActionAt = now;
   isProcessing = true;
   try {
@@ -85,7 +105,9 @@ async function guarded(fn) {
   }
 }
 
-// ---------- actions ----------
+// ===============================
+// ACTIONS
+// ===============================
 saveBtn.onclick = () =>
   guarded(() => {
     const text = normalize(input.value);
@@ -93,6 +115,7 @@ saveBtn.onclick = () =>
       showMessage("Type an identity statement first.", "error");
       return;
     }
+
     const state = load();
     state.identity = text;
     save(state);
@@ -133,17 +156,4 @@ checkInBtn.onclick = () =>
     showMessage(`Check-in logged. Day ${state.streak}.`, "success");
   });
 
-resetBtn.onclick = () =>
-  guarded(() => {
-    if (!confirm("Reset your streak back to Day 0?")) return;
-    const state = load();
-    state.streak = 0;
-    state.lastDate = null;
-    state.lastTime = null;
-    save(state);
-    render(state);
-    showMessage("Streak reset.", "success");
-  });
-
-// ---------- init ----------
-render(load());
+resetBtn.onclick
