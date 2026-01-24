@@ -230,6 +230,7 @@ body::before{
       rgba(0,0,0,0.98));
   box-shadow:var(--shadow-soft);
   padding:18px;
+  padding-bottom:26px;
   color:var(--ink);
   text-decoration:none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
