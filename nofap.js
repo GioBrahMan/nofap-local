@@ -1,11 +1,20 @@
-// nofap.js (LOCAL ONLY) — LocalStorage streak + identity, once-per-day check-in
+// nofap.js (LOCAL ONLY) — NoFap + NoCorn identity + streak
+// SAFE • MODULE-GUARDED • NO INPUT WIPES
 
 console.log("nofap.js loaded (local)");
 
 // ===============================
+// MODULE GUARD
+// ===============================
+if (!document.body.classList.contains("module-nofap")) {
+  console.warn("nofap.js aborted: wrong module");
+  return;
+}
+
+// ===============================
 // UI ELEMENTS
 // ===============================
-const identityInput = document.getElementById("identityInput");
+const identityInput = document.getElementById("socialIdentityInput");
 const streakDayText = document.getElementById("streakDayText");
 const savedIdentityText = document.getElementById("savedIdentityText");
 const lastCheckInText = document.getElementById("lastCheckInText");
@@ -23,18 +32,14 @@ const btnClearLocal = document.getElementById("btnClearLocal");
 
 // Year
 const yearNowEl = document.getElementById("yearNow");
-try {
-  if (yearNowEl) yearNowEl.textContent = String(new Date().getFullYear());
-} catch {}
+if (yearNowEl) yearNowEl.textContent = String(new Date().getFullYear());
 
 // ===============================
-// CONSTANTS / LIMITS
+// CONSTANTS
 // ===============================
 const MAX_IDENTITY_LEN = 2000;
 const MAX_STARTING_DAY = 5000;
 const RATE_LIMIT_MS = 900;
-
-// Storage keys
 const LS_KEY = "disciplineos_nofap_nocorn_v1";
 
 // ===============================
@@ -42,15 +47,6 @@ const LS_KEY = "disciplineos_nofap_nocorn_v1";
 // ===============================
 let isProcessing = false;
 let lastActionAt = 0;
-
-// ===============================
-// VISIBILITY
-// ===============================
-function revealLoadedUI() {
-  savedIdentityText?.classList.remove("is-loading");
-  streakDayText?.classList.remove("is-loading");
-  lastCheckInText?.classList.remove("is-loading");
-}
 
 // ===============================
 // MESSAGE
@@ -62,8 +58,8 @@ function showMessage(text, type = "success") {
   messageEl.classList.remove("is-hidden", "success", "error");
   messageEl.classList.add(type === "error" ? "error" : "success");
 
-  window.clearTimeout(showMessage._t);
-  showMessage._t = window.setTimeout(() => {
+  clearTimeout(showMessage._t);
+  showMessage._t = setTimeout(() => {
     messageEl.classList.add("is-hidden");
   }, 5000);
 }
@@ -76,23 +72,23 @@ function clearMessage() {
 }
 
 function setButtonsDisabled(disabled) {
-  const ds = !!disabled;
-  if (checkInBtn) checkInBtn.disabled = ds;
-  if (saveIdentityBtn) saveIdentityBtn.disabled = ds;
-  if (resetStreakBtn) resetStreakBtn.disabled = ds;
-  if (setStartingDayBtn) setStartingDayBtn.disabled = ds;
-  if (identityInput) identityInput.disabled = ds;
-  if (startingDayInput) startingDayInput.disabled = ds;
-  if (btnClearLocal) btnClearLocal.disabled = ds;
+  const d = !!disabled;
+  checkInBtn && (checkInBtn.disabled = d);
+  saveIdentityBtn && (saveIdentityBtn.disabled = d);
+  resetStreakBtn && (resetStreakBtn.disabled = d);
+  setStartingDayBtn && (setStartingDayBtn.disabled = d);
+  identityInput && (identityInput.disabled = d);
+  startingDayInput && (startingDayInput.disabled = d);
+  btnClearLocal && (btnClearLocal.disabled = d);
 }
 
 function updateCharCount() {
-  if (!charCountEl || !identityInput) return;
+  if (!identityInput || !charCountEl) return;
   charCountEl.textContent = `${identityInput.value.length}/${MAX_IDENTITY_LEN}`;
 }
 
 // ===============================
-// VALIDATION / NORMALIZATION
+// NORMALIZATION
 // ===============================
 function normalize(s) {
   return String(s ?? "")
@@ -105,47 +101,39 @@ function sanitizeForStorage(s) {
   let out = normalize(s);
   out = out.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
   out = out.replace(/[\u200B-\u200F\uFEFF]/g, "");
-  if (out.length > MAX_IDENTITY_LEN) out = out.slice(0, MAX_IDENTITY_LEN);
-  return out;
+  return out.slice(0, MAX_IDENTITY_LEN);
 }
 
 // ===============================
-// DATE/TIME (client-side + AM/PM helper)
+// DATE / TIME
 // ===============================
 function getTodayKey() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function getTimeString() {
   const d = new Date();
-  const hh = String(d.getHours()).padStart(2, "0");
-  const mm = String(d.getMinutes()).padStart(2, "0");
-  const ss = String(d.getSeconds()).padStart(2, "0");
-  return `${hh}:${mm}:${ss}`;
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
-function getPrettyDate(dateKey) {
-  if (!dateKey) return "—";
-  const [y, m, d] = String(dateKey).split("-").map(Number);
-  const date = new Date(y, (m || 1) - 1, d || 1);
-  return date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+function prettyDate(k) {
+  if (!k) return "—";
+  const [y, m, d] = k.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
-function formatTimeAmPm(timeStr) {
-  if (!timeStr) return "—";
-  const parts = String(timeStr).split(":");
-  const hh = parseInt(parts[0], 10);
-  const mm = parts[1] ?? "00";
-  const ss = parts[2];
-  if (Number.isNaN(hh)) return String(timeStr);
-
+function formatTimeAmPm(t) {
+  if (!t) return "—";
+  const [h, m, s] = t.split(":");
+  const hh = Number(h);
   const ampm = hh >= 12 ? "PM" : "AM";
-  const hour12 = ((hh + 11) % 12) + 1;
-  return ss ? `${hour12}:${mm}:${ss} ${ampm}` : `${hour12}:${mm} ${ampm}`;
+  const h12 = ((hh + 11) % 12) + 1;
+  return s ? `${h12}:${m}:${s} ${ampm}` : `${h12}:${m} ${ampm}`;
 }
 
 // ===============================
@@ -164,12 +152,7 @@ function defaultState() {
 function loadLocalState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return defaultState();
-    const parsed = JSON.parse(raw);
-    return {
-      ...defaultState(),
-      ...parsed,
-    };
+    return raw ? { ...defaultState(), ...JSON.parse(raw) } : defaultState();
   } catch {
     return defaultState();
   }
@@ -185,39 +168,29 @@ function saveLocalState(next) {
 }
 
 // ===============================
-// RENDER
+// RENDER (PURE)
 // ===============================
 function render(state) {
-  const stmtRaw = String(state.identity_statement ?? "");
-  const stmt = stmtRaw.trim()
-    ? stmtRaw
-    : "No identity saved yet. Your first check-in will lock it in.";
+  savedIdentityText &&
+    (savedIdentityText.textContent =
+      state.identity_statement?.trim() ||
+      "No identity saved yet. Your first check-in will lock it in.");
 
-  if (savedIdentityText) savedIdentityText.textContent = stmt;
+  const totalDay = Number(state.starting_day || 0) + Number(state.current_streak || 0);
+  streakDayText && (streakDayText.textContent = `Day ${totalDay}`);
 
-  const base = Number(state.starting_day || 0);
-  const cur = Number(state.current_streak || 0);
-  if (streakDayText) streakDayText.textContent = `Day ${base + cur}`;
+  lastCheckInText &&
+    (lastCheckInText.textContent = state.last_checkin_date
+      ? `Last Check-In: ${prettyDate(state.last_checkin_date)} · ${formatTimeAmPm(state.last_checkin_time)}`
+      : "Last Check-In: —");
 
-  if (lastCheckInText) {
-    if (state.last_checkin_date) {
-      const pretty = getPrettyDate(state.last_checkin_date);
-      const timePretty = state.last_checkin_time ? formatTimeAmPm(state.last_checkin_time) : "--:--";
-      lastCheckInText.textContent = `Last Check-In: ${pretty} · ${timePretty}`;
-    } else {
-      lastCheckInText.textContent = "Last Check-In: —";
-    }
-  }
-
-  if (startingDayInput) startingDayInput.value = base ? String(base) : "";
-
-  revealLoadedUI();
+  startingDayInput && (startingDayInput.value = state.starting_day ? String(state.starting_day) : "");
 }
 
 // ===============================
-// SINGLE-FLIGHT + SOFT RATE LIMIT
+// SINGLE-FLIGHT GUARD
 // ===============================
-async function guarded(actionName, fn) {
+async function guarded(name, fn) {
   const now = Date.now();
   if (now - lastActionAt < RATE_LIMIT_MS) {
     showMessage("Slow down — one action at a time.", "error");
@@ -225,10 +198,7 @@ async function guarded(actionName, fn) {
   }
   lastActionAt = now;
 
-  if (isProcessing) {
-    showMessage("Please wait — finishing the previous action.", "error");
-    return;
-  }
+  if (isProcessing) return;
 
   isProcessing = true;
   clearMessage();
@@ -237,13 +207,13 @@ async function guarded(actionName, fn) {
   try {
     await fn();
   } catch (err) {
-    const msg =
+    showMessage(
       err?.message === "IDENTITY_MISMATCH"
-        ? 'This doesn’t match your saved identity statement exactly. Use "Save / Update Identity" if you evolved it.'
-        : "Operation failed. Please try again.";
-
-    console.warn(`${actionName} failed.`, err);
-    showMessage(msg, "error");
+        ? "Identity does not match exactly. Use Save / Update Identity."
+        : "Operation failed. Please try again.",
+      "error"
+    );
+    console.warn(name, err);
   } finally {
     isProcessing = false;
     setButtonsDisabled(false);
@@ -251,159 +221,105 @@ async function guarded(actionName, fn) {
 }
 
 // ===============================
-// SET STARTING DAY
-// ===============================
-setStartingDayBtn?.addEventListener("click", () =>
-  guarded("setStartingDay", async () => {
-    const state = loadLocalState();
-
-    const raw = String(startingDayInput?.value ?? "").trim();
-    const desiredTotal = parseInt(raw, 10);
-
-    if (Number.isNaN(desiredTotal) || desiredTotal < 0 || desiredTotal > MAX_STARTING_DAY) {
-      showMessage(`Enter a valid day (0–${MAX_STARTING_DAY}).`, "error");
-      return;
-    }
-
-    const curStreak = Number(state.current_streak || 0);
-    const oldBase = Number(state.starting_day || 0);
-    const oldTotal = oldBase + curStreak;
-
-    if (desiredTotal < oldTotal) {
-      const ok = confirm(`You’re lowering your displayed day from ${oldTotal} to ${desiredTotal}. Continue?`);
-      if (!ok) return;
-    }
-
-    // Keep current_streak; adjust base so total becomes desiredTotal
-    const newBase = Math.max(0, desiredTotal - curStreak);
-
-    const next = { ...state, starting_day: newBase };
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
-    render(next);
-    showMessage(`Streak updated. Now displaying Day ${desiredTotal}.`, "success");
-  })
-);
-
-// ===============================
-// CHECK IN
-// ===============================
-checkInBtn?.addEventListener("click", () =>
-  guarded("checkIn", async () => {
-    const state = loadLocalState();
-
-    const input = sanitizeForStorage(identityInput?.value ?? "");
-    if (!input.trim()) {
-      showMessage("Type your identity statement before checking in.", "error");
-      return;
-    }
-
-    const todayKey = getTodayKey();
-    const nowTime = getTimeString();
-
-    // If no identity saved yet, first check-in locks it and starts Day 1
-    if (!String(state.identity_statement || "").trim()) {
-      const next = {
-        ...state,
-        identity_statement: input,
-        current_streak: 1,
-        last_checkin_date: todayKey,
-        last_checkin_time: nowTime,
-      };
-
-      if (!saveLocalState(next)) {
-        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-        return;
-      }
-
-      render(next);
-      showMessage("Identity locked in. Day 1 of your NoFap + NoCorn streak has started.", "success");
-      return;
-    }
-
-    // Already checked in today → update time only
-    if (state.last_checkin_date === todayKey) {
-      const next = { ...state, last_checkin_time: nowTime };
-
-      if (!saveLocalState(next)) {
-        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-        return;
-      }
-
-      render(next);
-      showMessage("You’ve already checked in today. Streak stays the same, time updated.", "success");
-      return;
-    }
-
-    // Must match saved identity exactly (normalized)
-    if (normalize(input) !== normalize(state.identity_statement)) throw new Error("IDENTITY_MISMATCH");
-
-    const nextStreak = Number(state.current_streak || 0) + 1;
-
-    const next = {
-      ...state,
-      current_streak: nextStreak,
-      last_checkin_date: todayKey,
-      last_checkin_time: nowTime,
-    };
-
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
-    render(next);
-
-    const base = Number(next.starting_day || 0);
-    showMessage(`Check-in logged. You are now on Day ${base + nextStreak}.`, "success");
-  })
-);
-
-// ===============================
-// SAVE / UPDATE IDENTITY
+// ACTIONS
 // ===============================
 saveIdentityBtn?.addEventListener("click", () =>
   guarded("saveIdentity", async () => {
     const state = loadLocalState();
+    const input = sanitizeForStorage(identityInput?.value);
 
-    const input = sanitizeForStorage(identityInput?.value ?? "");
     if (!input.trim()) {
       showMessage("Type an identity statement before saving.", "error");
       return;
     }
 
     const next = { ...state, identity_statement: input };
-
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
+    saveLocalState(next);
     render(next);
 
-    if (!String(state.identity_statement || "").trim()) {
-      showMessage('Identity saved. Now retype it exactly and press "Check In" to start Day 1.', "success");
-    } else {
-      showMessage("Identity updated. Your streak stays the same.", "success");
-    }
+    identityInput.value = ""; // intentional clear
+    updateCharCount();
+
+    showMessage("Identity saved. Retype it exactly to check in.", "success");
   })
 );
 
-// ===============================
-// RESET STREAK (keeps identity)
-// ===============================
+checkInBtn?.addEventListener("click", () =>
+  guarded("checkIn", async () => {
+    const state = loadLocalState();
+    const input = sanitizeForStorage(identityInput?.value);
+
+    if (!input.trim()) {
+      showMessage("Type your identity statement before checking in.", "error");
+      return;
+    }
+
+    const today = getTodayKey();
+    const time = getTimeString();
+
+    if (!state.identity_statement) {
+      const next = {
+        ...state,
+        identity_statement: input,
+        current_streak: 1,
+        last_checkin_date: today,
+        last_checkin_time: time,
+      };
+      saveLocalState(next);
+      render(next);
+      showMessage("Identity locked in. Day 1 started.", "success");
+      return;
+    }
+
+    if (normalize(input) !== normalize(state.identity_statement)) {
+      throw new Error("IDENTITY_MISMATCH");
+    }
+
+    if (state.last_checkin_date === today) {
+      saveLocalState({ ...state, last_checkin_time: time });
+      render({ ...state, last_checkin_time: time });
+      showMessage("Already checked in today.", "success");
+      return;
+    }
+
+    const next = {
+      ...state,
+      current_streak: state.current_streak + 1,
+      last_checkin_date: today,
+      last_checkin_time: time,
+    };
+
+    saveLocalState(next);
+    render(next);
+    showMessage(`Check-in logged. Day ${next.starting_day + next.current_streak}.`, "success");
+  })
+);
+
+setStartingDayBtn?.addEventListener("click", () =>
+  guarded("setStartingDay", async () => {
+    const state = loadLocalState();
+    const desired = parseInt(startingDayInput?.value ?? "", 10);
+
+    if (Number.isNaN(desired) || desired < 0 || desired > MAX_STARTING_DAY) {
+      showMessage(`Enter a valid day (0–${MAX_STARTING_DAY}).`, "error");
+      return;
+    }
+
+    const newBase = Math.max(0, desired - state.current_streak);
+    const next = { ...state, starting_day: newBase };
+
+    saveLocalState(next);
+    render(next);
+    showMessage(`Now displaying Day ${desired}.`, "success");
+  })
+);
+
 resetStreakBtn?.addEventListener("click", () =>
   guarded("resetStreak", async () => {
-    const state = loadLocalState();
-
-    const ok = confirm(
-      "Are you sure you want to reset your streak? This will set you back to Day 0, but will keep your identity statement."
-    );
+    const ok = confirm("Reset streak back to Day 0? Identity will be kept.");
     if (!ok) return;
 
+    const state = loadLocalState();
     const next = {
       ...state,
       current_streak: 0,
@@ -412,31 +328,20 @@ resetStreakBtn?.addEventListener("click", () =>
       last_checkin_time: null,
     };
 
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
+    saveLocalState(next);
     render(next);
-    showMessage("Streak reset to Day 0. Your identity statement is still saved.", "success");
+    showMessage("Streak reset to Day 0.", "success");
   })
 );
 
-// ===============================
-// CLEAR LOCAL DATA (module only)
-// ===============================
 btnClearLocal?.addEventListener("click", () =>
   guarded("clearLocal", async () => {
-    const ok = confirm("Clear ALL local data for this module? This removes identity + streak from this device.");
+    const ok = confirm("Clear ALL local data for this module?");
     if (!ok) return;
 
-    try {
-      localStorage.removeItem(LS_KEY);
-    } catch {}
-
-    const fresh = defaultState();
-    render(fresh);
-    showMessage("Local data cleared for this module.", "success");
+    localStorage.removeItem(LS_KEY);
+    render(defaultState());
+    showMessage("Local data cleared.", "success");
   })
 );
 
@@ -444,14 +349,11 @@ btnClearLocal?.addEventListener("click", () =>
 // INIT
 // ===============================
 function init() {
-  setButtonsDisabled(false);
   clearMessage();
-
+  setButtonsDisabled(false);
   updateCharCount();
   identityInput?.addEventListener("input", updateCharCount);
-
-  const state = loadLocalState();
-  render(state);
+  render(loadLocalState());
 }
 
 init();

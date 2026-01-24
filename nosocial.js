@@ -1,6 +1,15 @@
-// nosocial.js (LOCAL ONLY) — creators list + identity + streak
+// nosocial.js (LOCAL ONLY) — Healthy Social Media: creators + identity + streak
+// SAFE • NO INPUT WIPES • MODULE-GUARDED
 
 console.log("nosocial.js loaded (local)");
+
+// ===============================
+// MODULE GUARD (prevents cross-page bugs)
+// ===============================
+if (!document.body.classList.contains("module-nosocial")) {
+  console.warn("nosocial.js aborted: wrong module");
+  return;
+}
 
 // ===============================
 // UI ELEMENTS
@@ -19,7 +28,7 @@ const saveIdentityBtn = document.getElementById("saveIdentityBtn");
 const slipBtn = document.getElementById("slipBtn");
 
 // ===============================
-// CONSTANTS / LIMITS
+// CONSTANTS
 // ===============================
 const MAX_IDENTITY_LEN = 2000;
 const MAX_CREATORS = 50;
@@ -41,12 +50,10 @@ function showMessage(text, type = "success") {
   messageEl.textContent = String(text || "");
   messageEl.classList.remove("is-hidden", "success", "error");
   messageEl.classList.add(type === "error" ? "error" : "success");
-  messageEl.style.display = "block";
 
-  window.clearTimeout(showMessage._t);
-  showMessage._t = window.setTimeout(() => {
+  clearTimeout(showMessage._t);
+  showMessage._t = setTimeout(() => {
     messageEl.classList.add("is-hidden");
-    messageEl.style.display = "none";
   }, 5000);
 }
 
@@ -55,20 +62,19 @@ function clearMessage() {
   messageEl.textContent = "";
   messageEl.classList.add("is-hidden");
   messageEl.classList.remove("success", "error");
-  messageEl.style.display = "none";
 }
 
 function setButtonsDisabled(disabled) {
-  const ds = !!disabled;
-  checkInBtn && (checkInBtn.disabled = ds);
-  saveIdentityBtn && (saveIdentityBtn.disabled = ds);
-  slipBtn && (slipBtn.disabled = ds);
-  sitesInput && (sitesInput.disabled = ds);
-  identityInput && (identityInput.disabled = ds);
+  const d = !!disabled;
+  checkInBtn && (checkInBtn.disabled = d);
+  saveIdentityBtn && (saveIdentityBtn.disabled = d);
+  slipBtn && (slipBtn.disabled = d);
+  sitesInput && (sitesInput.disabled = d);
+  identityInput && (identityInput.disabled = d);
 }
 
 // ===============================
-// VALIDATION / NORMALIZATION
+// NORMALIZATION / SANITIZATION
 // ===============================
 function normalize(s) {
   return String(s ?? "")
@@ -81,11 +87,12 @@ function sanitizeForStorage(s, maxLen = MAX_IDENTITY_LEN) {
   let out = normalize(s);
   out = out.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
   out = out.replace(/[\u200B-\u200F\uFEFF]/g, "");
-  if (out.length > maxLen) out = out.slice(0, maxLen);
-  return out;
+  return out.slice(0, maxLen);
 }
 
-// creators textarea -> array
+// ===============================
+// CREATORS HELPERS
+// ===============================
 function creatorsTextToArray(text) {
   return String(text || "")
     .split("\n")
@@ -93,43 +100,41 @@ function creatorsTextToArray(text) {
     .filter(Boolean)
     .slice(0, MAX_CREATORS);
 }
+
 function creatorsArrayToText(arr) {
   return Array.isArray(arr) ? arr.join("\n") : "";
 }
 
 // ===============================
-// DATE/TIME
+// DATE / TIME
 // ===============================
 function getTodayKey() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = String(now.getMonth() + 1).padStart(2, "0");
-  const d = String(now.getDate()).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
+
 function getTimeString() {
   const d = new Date();
-  const hh = String(d.getHours()).padStart(2, "0");
-  const mm = String(d.getMinutes()).padStart(2, "0");
-  const ss = String(d.getSeconds()).padStart(2, "0");
-  return `${hh}:${mm}:${ss}`;
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}:${String(d.getSeconds()).padStart(2, "0")}`;
 }
-function getPrettyDate(dateKey) {
-  if (!dateKey) return "—";
-  const [y, m, d] = String(dateKey).split("-").map(Number);
-  const date = new Date(y, (m || 1) - 1, d || 1);
-  return date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-}
-function formatTimeAmPm(timeStr) {
-  if (!timeStr) return "—";
-  const parts = String(timeStr).split(":");
-  const hh = parseInt(parts[0], 10);
-  const mm = parts[1] ?? "00";
-  const ss = parts[2];
-  if (Number.isNaN(hh)) return String(timeStr);
+
+function formatTimeAmPm(t) {
+  if (!t) return "—";
+  const [h, m, s] = t.split(":");
+  const hh = Number(h);
   const ampm = hh >= 12 ? "PM" : "AM";
-  const hour12 = ((hh + 11) % 12) + 1;
-  return ss ? `${hour12}:${mm}:${ss} ${ampm}` : `${hour12}:${mm} ${ampm}`;
+  const h12 = ((hh + 11) % 12) + 1;
+  return s ? `${h12}:${m}:${s} ${ampm}` : `${h12}:${m} ${ampm}`;
+}
+
+function prettyDate(k) {
+  if (!k) return "—";
+  const [y, m, d] = k.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 // ===============================
@@ -144,16 +149,16 @@ function defaultState() {
     last_checkin_time: null,
   };
 }
+
 function loadLocalState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return defaultState();
-    const parsed = JSON.parse(raw);
-    return { ...defaultState(), ...parsed };
+    return raw ? { ...defaultState(), ...JSON.parse(raw) } : defaultState();
   } catch {
     return defaultState();
   }
 }
+
 function saveLocalState(next) {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(next));
@@ -164,46 +169,32 @@ function saveLocalState(next) {
 }
 
 // ===============================
-// RENDER
+// RENDER (PURE — NO INPUT MUTATION)
 // ===============================
 function render(state) {
   savedIdentityText?.classList.remove("is-loading");
   savedSitesText?.classList.remove("is-loading");
 
-  const identityRaw = String(state.identity_statement ?? "");
-  const identity = identityRaw.trim()
-    ? identityRaw
-    : "No identity saved yet. Your first check-in will lock it in.";
-  if (savedIdentityText) savedIdentityText.textContent = identity;
+  savedIdentityText && (savedIdentityText.textContent =
+    state.identity_statement?.trim() ||
+    "No identity saved yet. Your first check-in will lock it in.");
 
-  const creatorsText = creatorsArrayToText(state.allowed_creators);
-  const creators = creatorsText.trim()
-    ? creatorsText
-    : "No content creators listed yet. Start by naming the creators you enjoy watching or add value to your life.";
-  if (savedSitesText) savedSitesText.textContent = creators;
+  savedSitesText && (savedSitesText.textContent =
+    creatorsArrayToText(state.allowed_creators) ||
+    "No content creators listed yet.");
 
-  const cur = Number(state.current_streak || 0);
-  if (streakDayText) streakDayText.textContent = `Day ${cur}`;
+  streakDayText && (streakDayText.textContent = `Day ${state.current_streak || 0}`);
 
-  if (lastCheckInText) {
-    if (state.last_checkin_date) {
-      const pretty = getPrettyDate(state.last_checkin_date);
-      const timePretty = state.last_checkin_time ? formatTimeAmPm(state.last_checkin_time) : "--:--";
-      lastCheckInText.textContent = `Last Check-In: ${pretty} · ${timePretty}`;
-    } else {
-      lastCheckInText.textContent = "Last Check-In: —";
-    }
-  }
-
-  // optional: clear inputs after render
-  if (sitesInput) sitesInput.value = "";
-  if (identityInput) identityInput.value = "";
+  lastCheckInText &&
+    (lastCheckInText.textContent = state.last_checkin_date
+      ? `Last Check-In: ${prettyDate(state.last_checkin_date)} · ${formatTimeAmPm(state.last_checkin_time)}`
+      : "Last Check-In: —");
 }
 
 // ===============================
-// SINGLE-FLIGHT
+// SINGLE-FLIGHT GUARD
 // ===============================
-async function guarded(actionName, fn) {
+async function guarded(name, fn) {
   const now = Date.now();
   if (now - lastActionAt < RATE_LIMIT_MS) {
     showMessage("Slow down — one action at a time.", "error");
@@ -211,10 +202,7 @@ async function guarded(actionName, fn) {
   }
   lastActionAt = now;
 
-  if (isProcessing) {
-    showMessage("Please wait — finishing the previous action.", "error");
-    return;
-  }
+  if (isProcessing) return;
 
   isProcessing = true;
   clearMessage();
@@ -223,13 +211,13 @@ async function guarded(actionName, fn) {
   try {
     await fn();
   } catch (err) {
-    const raw = String(err?.message || "").toLowerCase();
-    if (raw.includes("identity_mismatch")) {
-      showMessage('This doesn’t match your saved identity statement exactly. Use "Save / Update Identity" if you changed it.', "error");
-    } else {
-      showMessage("Operation failed. Please try again.", "error");
-    }
-    console.warn(`${actionName} failed.`, err);
+    showMessage(
+      err?.message === "IDENTITY_MISMATCH"
+        ? "Identity does not match exactly. Use Save / Update Identity."
+        : "Operation failed. Please try again.",
+      "error"
+    );
+    console.warn(name, err);
   } finally {
     isProcessing = false;
     setButtonsDisabled(false);
@@ -242,105 +230,85 @@ async function guarded(actionName, fn) {
 saveIdentityBtn?.addEventListener("click", () =>
   guarded("saveIdentity", async () => {
     const state = loadLocalState();
+    const identity = sanitizeForStorage(identityInput?.value);
 
-    const identityRaw = sanitizeForStorage(identityInput?.value ?? "", MAX_IDENTITY_LEN);
-    if (!identityRaw.trim()) {
+    if (!identity.trim()) {
       showMessage("Type an identity statement before saving.", "error");
       return;
     }
 
-    const allowedCreators = creatorsTextToArray(sitesInput?.value ?? "");
-
     const next = {
       ...state,
-      allowed_creators: allowedCreators,
-      identity_statement: identityRaw,
+      identity_statement: identity,
+      allowed_creators: creatorsTextToArray(sitesInput?.value),
     };
 
     if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
+      showMessage("Could not save. Storage blocked.", "error");
       return;
     }
 
     render(next);
-    showMessage("Identity + creators saved. Your streak stays the same.", "success");
+
+    // intentional clear AFTER success
+    identityInput.value = "";
+    sitesInput.value = "";
+
+    showMessage("Identity + creators saved.", "success");
   })
 );
 
 checkInBtn?.addEventListener("click", () =>
   guarded("checkIn", async () => {
     const state = loadLocalState();
+    const input = sanitizeForStorage(identityInput?.value);
 
-    const input = sanitizeForStorage(identityInput?.value ?? "", MAX_IDENTITY_LEN);
     if (!input.trim()) {
-      showMessage("Type your Healthy Social Media identity statement before checking in.", "error");
+      showMessage("Type your identity statement before checking in.", "error");
       return;
     }
 
-    const todayKey = getTodayKey();
-    const nowTime = getTimeString();
+    const today = getTodayKey();
+    const time = getTimeString();
 
-    // first time: lock identity + creators and start Day 1
-    if (!String(state.identity_statement || "").trim()) {
-      const allowedCreators = creatorsTextToArray(sitesInput?.value ?? "");
+    if (!state.identity_statement) {
       const next = {
         ...state,
-        allowed_creators: allowedCreators,
         identity_statement: input,
+        allowed_creators: creatorsTextToArray(sitesInput?.value),
         current_streak: 1,
-        last_checkin_date: todayKey,
-        last_checkin_time: nowTime,
+        last_checkin_date: today,
+        last_checkin_time: time,
       };
-
-      if (!saveLocalState(next)) {
-        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-        return;
-      }
-
+      saveLocalState(next);
       render(next);
-      showMessage("Identity locked in. Day 1 of your Healthy Social Media streak has started.", "success");
+      showMessage("Identity locked in. Day 1 started.", "success");
       return;
     }
 
-    // already checked in today -> update time only
-    if (state.last_checkin_date === todayKey) {
-      const next = { ...state, last_checkin_time: nowTime };
-      if (!saveLocalState(next)) {
-        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-        return;
-      }
-      render(next);
-      showMessage("You already checked in today. Streak stays the same, time updated.", "success");
-      return;
+    if (normalize(input) !== normalize(state.identity_statement)) {
+      throw new Error("IDENTITY_MISMATCH");
     }
 
-    // must match identity exactly
-    if (normalize(input) !== normalize(state.identity_statement)) throw new Error("IDENTITY_MISMATCH");
-
-    const nextStreak = Number(state.current_streak || 0) + 1;
     const next = {
       ...state,
-      current_streak: nextStreak,
-      last_checkin_date: todayKey,
-      last_checkin_time: nowTime,
+      current_streak: state.current_streak + 1,
+      last_checkin_date: today,
+      last_checkin_time: time,
     };
 
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
+    saveLocalState(next);
     render(next);
-    showMessage(`Check-in logged. You are now on Day ${nextStreak}.`, "success");
+    showMessage(`Check-in logged. Day ${next.current_streak}.`, "success");
   })
 );
 
 slipBtn?.addEventListener("click", () =>
   guarded("slip", async () => {
-    const state = loadLocalState();
-    const ok = confirm("Mark today as a slip and reset your Healthy Social Media streak back to Day 0?");
+    const ok = confirm("Mark today as a slip and reset your streak?");
     if (!ok) return;
 
+    const state = loadLocalState();
     const next = {
       ...state,
       current_streak: 0,
@@ -348,13 +316,9 @@ slipBtn?.addEventListener("click", () =>
       last_checkin_time: null,
     };
 
-    if (!saveLocalState(next)) {
-      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-      return;
-    }
-
+    saveLocalState(next);
     render(next);
-    showMessage("You marked a slip. Streak reset to Day 0. We rebuild from zero.", "success");
+    showMessage("Slip recorded. Back to Day 0.", "success");
   })
 );
 
@@ -362,8 +326,9 @@ slipBtn?.addEventListener("click", () =>
 // INIT
 // ===============================
 function init() {
-  setButtonsDisabled(false);
   clearMessage();
+  setButtonsDisabled(false);
   render(loadLocalState());
 }
+
 init();
