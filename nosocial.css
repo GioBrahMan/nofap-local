@@ -517,8 +517,14 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 }
 
 /* No Fap + No Corn specific */
-#identityInput{
-  min-height: 160px;
-  max-height: 240px;
+#nofapIdentityInput{
+  min-height: 180px;
+  max-height: 260px;
   line-height: 1.65;
+}
+
+#socialIdentityInput{
+  min-height:180px;
+  max-height:260px;
+  line-height:1.65;
 }
