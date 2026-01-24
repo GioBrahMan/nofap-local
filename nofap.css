@@ -1,13 +1,11 @@
-/* nofap.css — CANONICAL (mirrors Social + Monk) */
+/* nofap.css — LOCAL ONLY (CANONICAL) */
 
 :root{
   --bg:#050608;
   --ink:#f5f5f7;
   --muted:#9ea2b0;
-
   --border-soft:rgba(255,255,255,0.14);
   --border-strong:rgba(255,255,255,0.32);
-
   --shadow-soft:0 18px 60px rgba(0,0,0,0.85);
   --shadow-card:0 24px 80px rgba(0,0,0,0.95);
 }
@@ -17,7 +15,7 @@ html,body{ height:100%; }
 
 body{
   margin:0;
-  font-family:system-ui,-apple-system,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
   color:var(--ink);
   background:
     radial-gradient(circle at 0% 0%, #181a23 0, transparent 55%),
@@ -36,48 +34,39 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding-bottom:18px;
   border-bottom:1px solid rgba(255,255,255,0.04);
+  padding-bottom:18px;
 }
 
 .nav-right{
   display:flex;
   gap:18px;
   font-size:12px;
-  letter-spacing:.18em;
+  letter-spacing:0.18em;
   text-transform:uppercase;
-  color:var(--muted);
 }
 
-.nav-right a{ color:var(--muted); }
-.nav-right a.is-active{ color:var(--ink); }
-
-/* SECTIONS */
-.section-label{
-  font-size:11px;
-  letter-spacing:.26em;
-  text-transform:uppercase;
+.nav-right a{
   color:var(--muted);
+  text-decoration:none;
 }
-.section-heading{ font-size:24px; margin:8px 0; }
-.section-sub{ font-size:13px; color:var(--muted); max-width:520px; }
+.nav-right a.is-active{
+  color:var(--ink);
+}
 
 /* LAYOUT */
 .identity-layout{
-  margin-top:26px;
   display:grid;
   grid-template-columns:1.2fr 1fr;
   gap:28px;
+  margin-top:26px;
 }
 
 /* CARD */
-.identity-card,
-.streak-card{
+.identity-card{
   border-radius:20px;
   border:1px solid var(--border-soft);
-  background:
-    radial-gradient(circle at 0 0, rgba(255,255,255,0.15), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.98));
+  background:linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.98));
   box-shadow:var(--shadow-soft);
   padding:22px;
 }
@@ -88,44 +77,50 @@ body{
   min-height:180px;
   border-radius:14px;
   border:1px solid var(--border-soft);
-  background:transparent;
-  padding:12px;
+  background:rgba(255,255,255,0.06);
   color:var(--ink);
+  padding:12px;
   resize:vertical;
 }
 
-/* STREAK */
-.streak-day{
-  font-size:26px;
-  font-weight:600;
-  letter-spacing:.12em;
-  display:flex;
-  gap:8px;
-}
-.streak-caption{
-  font-size:10px;
+/* BUTTONS */
+.btn-primary,.btn-ghost,.btn-subtle{
+  border-radius:999px;
+  padding:10px 18px;
   text-transform:uppercase;
-  letter-spacing:.16em;
-  color:var(--muted);
+  font-size:12px;
+  cursor:pointer;
 }
 
-/* IDENTITY BOX */
-.streak-identity-box{
-  margin-top:14px;
-  border:1px dashed rgba(255,255,255,0.22);
-  border-radius:12px;
-  padding:10px;
-  font-size:11px;
+.btn-primary{ background:#fff; color:#000; }
+.btn-ghost{ background:transparent; border:1px solid var(--border-soft); color:var(--ink); }
+.btn-subtle{ background:transparent; color:var(--muted); font-size:10px; }
+
+/* STREAK */
+.streak-card{
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.22);
+  background:linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.98));
+  box-shadow:var(--shadow-card);
+  padding:16px;
+}
+
+.streak-day{
+  font-size:26px;
+  letter-spacing:0.12em;
+  display:flex;
+  gap:6px;
 }
 
 /* FOOTER */
 .footer{
+  border-top:1px solid rgba(255,255,255,0.06);
   margin-top:40px;
+  padding-top:18px;
   font-size:11px;
   color:var(--muted);
 }
 
-/* MOBILE */
 @media (max-width:900px){
   .identity-layout{ grid-template-columns:1fr; }
 }

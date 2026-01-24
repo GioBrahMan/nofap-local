@@ -3,135 +3,124 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Discipline OS — NoFap + NoCorn</title>
 
-  <!-- Hygiene meta -->
-  <meta http-equiv="Referrer-Policy" content="no-referrer" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-
+  <!-- Local-only CSS -->
   <link rel="stylesheet" href="./nofap.css" />
 </head>
 
 <body>
-<div class="page">
+  <div class="page">
 
-  <!-- NAV -->
-  <header class="nav">
-    <div class="nav-left">
-      <div class="logo-mark"><span>OS</span></div>
-      <div class="logo-text">
-        <div class="logo-title">Discipline OS</div>
-        <div class="logo-sub">Life Operating System</div>
-      </div>
-    </div>
-
-    <nav class="nav-right">
-      <div><a class="is-active" aria-current="page">NO FAP + NO CORN</a></div>
-      <div><a href="NoSocialMedia.html">HEALTHY SOCIAL MEDIA</a></div>
-      <div><a href="MonkMode.html">MONK MODE</a></div>
-      <div><a href="LastLog.html">LAST LOG</a></div>
-    </nav>
-  </header>
-
-  <!-- MAIN -->
-  <main>
-    <section>
-      <div class="section-label">Module · NoFap + NoCorn</div>
-      <h1 class="section-heading">Identity Streak</h1>
-      <p class="section-sub">
-        One identity. Typed exactly. Every day.  
-        Identity compounds — discipline is enforced by repetition.
-      </p>
-
-      <div class="identity-layout">
-
-        <!-- LEFT: INPUT -->
-        <div class="identity-card">
-          <div class="pill-tag"><span>Identity Console</span></div>
-
-          <p class="identity-card-text">
-            Type the same identity statement every morning.
-            You are not “checking a box” — you are **proving alignment**.
-          </p>
-
-          <textarea
-            id="nofapInput"
-            class="identity-textarea"
-            placeholder="I am a man who does not consume adult content.
-I am a man who does not fap.
-I choose discipline over impulse.
-I choose clarity over lust."
-            maxlength="2000"
-            autocomplete="off"
-            spellcheck="false"
-          ></textarea>
-
-          <div class="identity-meta">
-            <span>Exact wording required</span>
-            <span id="charCount">0 / 2000</span>
-          </div>
-
-          <div class="btn-row">
-            <button class="btn-primary" id="checkInBtn">Check In</button>
-            <button class="btn-ghost" id="saveIdentityBtn">Save / Update</button>
-            <button class="btn-subtle" id="resetStreakBtn">Reset</button>
-          </div>
-
-          <div id="message" class="message is-hidden"></div>
+    <!-- NAV -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="logo-mark"><span>OS</span></div>
+        <div class="logo-text">
+          <div class="logo-title">Discipline OS</div>
+          <div class="logo-sub">Life Operating System</div>
         </div>
-
-        <!-- RIGHT: STREAK (MIRRORS SOCIAL / MONK) -->
-        <aside class="streak-card">
-
-          <div class="streak-top-row">
-            <div class="streak-label">Your Streak</div>
-            <div class="streak-status-pill">
-              <span></span> Local Mode
-            </div>
-          </div>
-
-          <div class="streak-main">
-            <div class="streak-day">
-              <span class="flame" aria-hidden="true">🚫🔥</span>
-              <span id="streakDayText" class="is-loading">Day 0</span>
-            </div>
-            <div class="streak-caption">NoFap + NoCorn</div>
-          </div>
-
-          <!-- SAVED IDENTITY (REFERENCE PANEL) -->
-          <div class="streak-identity-box">
-            <div class="streak-identity-label">Saved Identity</div>
-            <div
-              id="savedIdentityText"
-              class="streak-identity-text is-loading"
-            >
-              No identity saved yet.
-            </div>
-          </div>
-
-          <div class="streak-footer">
-            <span id="lastCheckInText" class="is-loading">
-              Last Check-In: —
-            </span>
-            <span>Identity compounds.</span>
-          </div>
-
-        </aside>
-
       </div>
-    </section>
-  </main>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div>&gt; MODULE STATUS: ACTIVE · NOFAP + NOCORN</div>
-    <div>MODE: LOCAL</div>
-    <div>© <span id="yearNow"></span> Discipline OS</div>
-  </footer>
+      <nav class="nav-right">
+        <div><a class="is-active" aria-current="page">NO FAP + NO CORN</a></div>
+        <div><a href="NoSocialMedia.html">HEALTHY SOCIAL MEDIA</a></div>
+        <div><a href="MonkMode.html">MONK MODE</a></div>
+        <div><a href="LastLog.html">LAST LOG</a></div>
+      </nav>
+    </header>
 
-</div>
+    <!-- MAIN -->
+    <main>
+      <section>
+        <div class="section-label">Module 01 · NoFap + NoCorn</div>
+        <h1 class="section-heading">NoFap + NoCorn Identity Streak</h1>
+        <p class="section-sub">
+          One identity statement. Typed exactly. Every morning.
+        </p>
 
-<script src="./nofap.js"></script>
+        <div class="identity-layout">
+
+          <!-- LEFT -->
+          <div class="identity-card">
+            <div class="pill-tag"><span>Identity Console</span> · NoFap + NoCorn</div>
+
+            <p class="identity-card-text">
+              Write the identity you will retype every day.  
+              Matching it exactly is how the streak advances.
+            </p>
+
+            <textarea
+              id="identityInput"
+              class="identity-textarea"
+              maxlength="2000"
+              spellcheck="false"
+              placeholder="Example:
+I am a man who no longer seeks corn.
+I am a man who no longer faps.
+From here on until I die, I say no.
+#WeNeverFold"
+            ></textarea>
+
+            <div class="identity-meta">
+              <span>Exact wording matters</span>
+              <span id="charCount">0/2000</span>
+            </div>
+
+            <div class="identity-hint">
+              • CHECK IN once per day<br/>
+              • SAVE updates without breaking streak
+            </div>
+
+            <div class="btn-row">
+              <button id="checkInBtn" class="btn-primary">Check In</button>
+              <button id="saveIdentityBtn" class="btn-ghost">Save / Update</button>
+              <button id="resetStreakBtn" class="btn-subtle">Reset Streak</button>
+            </div>
+
+            <div id="message" class="message is-hidden"></div>
+          </div>
+
+          <!-- RIGHT -->
+          <aside class="streak-card">
+            <div class="streak-top-row">
+              <div class="streak-label">Your Streak</div>
+              <div class="streak-status-pill"><span></span>Local Mode</div>
+            </div>
+
+            <div class="streak-main">
+              <div class="streak-day">
+                <span class="flame">🚫🔥</span>
+                <span id="streakDayText">Day 0</span>
+              </div>
+              <div class="streak-caption">NoFap + NoCorn</div>
+            </div>
+
+            <div class="streak-identity-box">
+              <div class="streak-identity-label">Saved Identity</div>
+              <div id="savedIdentityText" class="streak-identity-text is-loading">
+                No identity saved yet.
+              </div>
+            </div>
+
+            <div class="streak-footer">
+              <span id="lastCheckInText">Last Check-In: —</span>
+              <span>Identity compounds daily.</span>
+            </div>
+          </aside>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-line">&gt; MODULE STATUS: ACTIVE · NOFAP + NOCORN</div>
+      <div class="footer-line">MODE: LOCAL</div>
+      <div class="footer-line">© Discipline OS</div>
+    </footer>
+  </div>
+
+  <script src="./nofap.js"></script>
 </body>
 </html>
