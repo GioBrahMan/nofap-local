@@ -20,7 +20,7 @@
   --shadow-soft:0 18px 60px rgba(0,0,0,0.85);
   --shadow-card:0 24px 80px rgba(0,0,0,0.95);
 
-  /* Subtle NoFap accent (used sparingly) */
+  /* Subtle NoFap accent */
   --nofap-accent:#ff9a9a;
 }
 
@@ -32,8 +32,8 @@ html,body{ height:100%; }
 
 body{
   margin:0;
-  font-family:system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-               "Segoe UI", Roboto, sans-serif;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text",
+               "Segoe UI",Roboto,sans-serif;
   color:var(--ink);
   background:
     radial-gradient(circle at 0% 0%, #181a23 0, transparent 55%),
@@ -86,8 +86,7 @@ a:hover{ color:#fff; }
   position:sticky;
   top:0;
   backdrop-filter:blur(18px);
-  background:linear-gradient(
-    to bottom,
+  background:linear-gradient(to bottom,
     rgba(5,6,8,0.9),
     rgba(5,6,8,0.75),
     transparent
@@ -116,9 +115,8 @@ a:hover{ color:#fff; }
 }
 
 .nav-right a{
-  position:relative;
   color:var(--muted);
-  transition:color .2s ease, text-shadow .2s ease;
+  transition:color .2s ease,text-shadow .2s ease;
 }
 .nav-right a:hover{
   color:var(--ink);
@@ -129,67 +127,33 @@ a:hover{ color:#fff; }
   color:var(--ink);
   text-shadow:0 0 10px rgba(255,255,255,0.35);
 }
-.nav-right a.is-active::after,
-.nav-right a[aria-current="page"]::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:18px;
-  bottom:-8px;
-  height:1px;
-  background:linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,255,255,0.45),
-    transparent
-  );
-  opacity:0.85;
-}
 
 /* Logo */
 .logo-mark{
-  width:26px;
-  height:26px;
+  width:26px;height:26px;
   border-radius:7px;
   border:1px solid var(--border-strong);
   display:flex;
   align-items:center;
   justify-content:center;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04),
-    0 12px 40px rgba(0,0,0,0.8);
-  background:radial-gradient(
-    circle at 30% 0%,
-    rgba(255,255,255,0.18),
-    transparent 60%
-  );
-  position:relative;
-  overflow:hidden;
-}
-.logo-mark::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(135deg, rgba(255,255,255,0.18), transparent 60%);
-  mix-blend-mode:soft-light;
-  opacity:0.7;
+  background:radial-gradient(circle at 30% 0%, rgba(255,255,255,0.18), transparent 60%);
+  box-shadow:0 12px 40px rgba(0,0,0,0.8);
 }
 .logo-mark span{
   font-size:12px;
   font-weight:600;
-  letter-spacing:0.08em;
+  letter-spacing:.08em;
 }
 
-.logo-text{ display:flex; flex-direction:column; gap:1px; }
 .logo-title{
   font-size:14px;
   font-weight:600;
-  letter-spacing:0.14em;
+  letter-spacing:.14em;
   text-transform:uppercase;
 }
 .logo-sub{
   font-size:10px;
-  letter-spacing:0.14em;
+  letter-spacing:.14em;
   text-transform:uppercase;
   color:var(--muted);
 }
@@ -201,18 +165,15 @@ section{
   padding:36px 0;
   border-top:1px solid rgba(255,255,255,0.04);
 }
-
 .section-label{
   font-size:11px;
-  letter-spacing:0.26em;
+  letter-spacing:.26em;
   text-transform:uppercase;
   color:var(--muted);
   margin-bottom:12px;
 }
 .section-heading{
   font-size:24px;
-  line-height:1.35;
-  max-width:540px;
   margin-bottom:8px;
 }
 .section-sub{
@@ -249,21 +210,6 @@ section{
   gap:16px;
 }
 
-.identity-card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-}
-
-.pill-tag{
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:0.22em;
-  color:var(--muted);
-}
-.pill-tag span{ color:rgba(245,245,247,0.9); }
-
 .identity-card-text{
   font-size:12px;
   color:var(--muted);
@@ -280,39 +226,16 @@ section{
   resize:vertical;
   border-radius:14px;
   border:1px solid var(--border-soft);
-  background:radial-gradient(
-    circle at 0 0,
-    rgba(255,255,255,0.08),
-    transparent 60%
-  );
+  background:radial-gradient(circle at 0 0, rgba(255,255,255,0.08), transparent 60%);
   padding:12px 13px;
   font-size:12px;
   line-height:1.7;
   color:var(--ink);
-  font-family:inherit;
   outline:none;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.7);
   white-space:pre-wrap;
 }
 .identity-textarea::placeholder{
-  color:rgba(158,162,176,0.9);
-}
-
-/* ===================== */
-/* Meta / Hint */
-/* ===================== */
-.identity-meta{
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:0.18em;
-  color:var(--muted);
-  display:flex;
-  justify-content:space-between;
-}
-.identity-hint{
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.6;
+  color:rgba(158,162,176,.9);
 }
 
 /* ===================== */
@@ -322,73 +245,49 @@ section{
   border-radius:999px;
   padding:10px 18px;
   font-size:12px;
-  font-weight:500;
-  letter-spacing:0.18em;
+  letter-spacing:.18em;
   text-transform:uppercase;
-  border:1px solid transparent;
   cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  transition:all 0.2s ease-out;
+  border:1px solid transparent;
+  transition:.2s ease;
 }
 
 .btn-primary{
-  color:var(--bg);
-  background:linear-gradient(135deg, #ffffff, #e6e6ea);
-  box-shadow:0 12px 40px rgba(0,0,0,0.95);
+  background:linear-gradient(135deg,#fff,#e6e6ea);
+  color:#050608;
 }
-.btn-primary:hover{
-  transform:translateY(-1px);
-  box-shadow:0 18px 55px rgba(0,0,0,0.9);
-}
+.btn-primary:hover{ transform:translateY(-1px); }
 
 .btn-ghost{
-  color:var(--ink);
   border-color:var(--border-soft);
-  background:radial-gradient(circle at 0 0, rgba(255,255,255,0.08), transparent 60%);
-}
-.btn-ghost:hover{
-  border-color:var(--border-strong);
-  background:radial-gradient(circle at 0 0, rgba(255,255,255,0.16), transparent 60%);
+  background:transparent;
+  color:var(--ink);
 }
 
 .btn-subtle{
-  color:var(--muted);
   border-color:rgba(255,255,255,0.12);
   background:transparent;
   font-size:10px;
-  padding:7px 14px;
-}
-.btn-subtle:hover{
-  border-color:rgba(255,255,255,0.3);
-  color:var(--ink);
+  color:var(--muted);
 }
 
-.btn-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:16px;
-}
+.btn-row{ display:flex; gap:8px; flex-wrap:wrap; }
 
 /* ===================== */
 /* Messages */
 /* ===================== */
 .message{
-  margin-top:8px;
   font-size:11px;
-  line-height:1.5;
   padding:8px 10px;
   border-radius:10px;
 }
 .message.success{
-  border:1px solid rgba(76,242,158,0.5);
   background:rgba(13,45,25,0.9);
+  border:1px solid rgba(76,242,158,0.5);
 }
 .message.error{
-  border:1px solid rgba(255,120,120,0.7);
   background:rgba(56,9,9,0.95);
+  border:1px solid rgba(255,120,120,0.7);
 }
 
 /* ===================== */
@@ -402,7 +301,6 @@ section{
     linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.98));
   box-shadow:var(--shadow-card);
   padding:16px;
-  font-size:11px;
   display:flex;
   flex-direction:column;
   gap:10px;
@@ -413,7 +311,7 @@ section{
 .streak-day{
   font-size:26px;
   font-weight:600;
-  letter-spacing:0.12em;
+  letter-spacing:.12em;
   display:flex;
   align-items:center;
   gap:6px;
@@ -421,13 +319,12 @@ section{
 .flame{
   font-size:18px;
   color:var(--nofap-accent);
-  filter:drop-shadow(0 0 10px rgba(255,154,154,0.55));
+  filter:drop-shadow(0 0 10px rgba(255,154,154,.55));
 }
-
 .streak-caption{
   font-size:10px;
   text-transform:uppercase;
-  letter-spacing:0.16em;
+  letter-spacing:.16em;
   color:var(--muted);
 }
 
@@ -446,12 +343,12 @@ section{
 .streak-identity-label{
   font-size:10px;
   text-transform:uppercase;
-  letter-spacing:0.16em;
+  letter-spacing:.16em;
   color:var(--muted);
   margin-bottom:4px;
 }
 .streak-identity-text{
-  font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family:ui-monospace,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   white-space:pre-wrap;
   word-break:break-word;
 }
@@ -463,13 +360,8 @@ section{
   border-top:1px solid rgba(255,255,255,0.06);
   padding-top:18px;
   margin-top:40px;
-  font-family:ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   font-size:11px;
   color:var(--muted);
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  gap:10px;
 }
 
 /* ===================== */
@@ -477,8 +369,5 @@ section{
 /* ===================== */
 @media (max-width:900px){
   .identity-layout{ grid-template-columns:1fr; }
-  .streak-card{
-    position:static;
-    top:auto;
-  }
+  .streak-card{ position:static; }
 }
