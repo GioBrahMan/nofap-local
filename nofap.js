@@ -15,6 +15,9 @@ const checkInBtn = document.getElementById("checkInBtn");
 const saveBtn = document.getElementById("saveIdentityBtn");
 const resetBtn = document.getElementById("resetStreakBtn");
 
+const startingDayInput = document.getElementById("startingDayInput");
+const setStartingDayBtn = document.getElementById("setStartingDayBtn");
+
 /* =========================
    STORAGE
 ========================= */
@@ -26,6 +29,7 @@ function defaultState() {
     streak: 0,
     lastDate: null,
     lastTime: null,
+    baseLocked: false,
   };
 }
 
@@ -49,7 +53,10 @@ function todayKey() {
 }
 
 function nowTime() {
-  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function showMessage(text, type = "success") {
@@ -81,6 +88,13 @@ function render() {
 
   charCount.textContent = `${input.value.length}/2000`;
   yearNow.textContent = new Date().getFullYear();
+
+  // lock starter if needed
+  startingDayInput.disabled = state.baseLocked;
+  setStartingDayBtn.disabled = state.baseLocked;
+  if (state.baseLocked) {
+    startingDayInput.placeholder = "Locked";
+  }
 }
 
 /* =========================
@@ -119,6 +133,7 @@ checkInBtn.onclick = () => {
   state.streak += 1;
   state.lastDate = today;
   state.lastTime = nowTime();
+  state.baseLocked = true;
 
   save(state);
   render();
@@ -129,6 +144,27 @@ resetBtn.onclick = () => {
   localStorage.removeItem(KEY);
   render();
   showMessage("Streak reset.", "error");
+};
+
+setStartingDayBtn.onclick = () => {
+  const v = Number(startingDayInput.value);
+  if (!Number.isFinite(v) || v < 0 || v > 5000) {
+    showMessage("Enter a valid number (0–5000).", "error");
+    return;
+  }
+
+  const state = load();
+  if (state.baseLocked) {
+    showMessage("Base streak is locked.", "error");
+    return;
+  }
+
+  state.streak = Math.floor(v);
+  state.baseLocked = true;
+
+  save(state);
+  render();
+  showMessage(`Starting streak set to Day ${state.streak}.`);
 };
 
 /* =========================

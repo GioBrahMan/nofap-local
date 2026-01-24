@@ -73,12 +73,12 @@ I choose discipline over impulse.
             </div>
 
             <div class="btn-row">
-              <button id="checkInBtn" class="btn-primary">Check In</button>
-              <button id="saveIdentityBtn" class="btn-ghost">Save / Update</button>
-              <button id="resetStreakBtn" class="btn-subtle">Reset Streak</button>
+              <button id="checkInBtn" class="btn-primary" type="button">Check In</button>
+              <button id="saveIdentityBtn" class="btn-ghost" type="button">Save / Update</button>
+              <button id="resetStreakBtn" class="btn-subtle" type="button">Reset Streak</button>
             </div>
 
-            <div id="message" class="message is-hidden"></div>
+            <div id="message" class="message is-hidden" role="status" aria-live="polite"></div>
           </div>
 
           <!-- RIGHT -->
@@ -89,19 +89,41 @@ I choose discipline over impulse.
             </div>
 
             <div class="streak-main">
+              <!-- Set Streak -->
+              <div class="starterBox">
+                <div class="streak-label starterBox__label">Already have a streak?</div>
+
+                <div class="starterBox__row">
+                  <input
+                    id="startingDayInput"
+                    class="starterBox__input"
+                    type="number"
+                    min="0"
+                    max="5000"
+                    placeholder="e.g. 62"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button id="setStartingDayBtn" class="btn-subtle" type="button">Set</button>
+                </div>
+
+                <div class="starterBox__hint">
+                  One-time base setter. Locks after first check-in.
+                </div>
+              </div>
+
               <div class="streak-day">
                 <span class="flame">🚫🔥</span>
                 <span id="streakDayText">Day 0</span>
               </div>
+
               <div class="streak-caption">NoFap + NoCorn</div>
             </div>
 
             <div class="streak-identity-box">
               <div class="streak-identity-label">Saved Identity</div>
-              <div
-                id="savedIdentityText"
-                class="streak-identity-text is-loading"
-              >
+              <div id="savedIdentityText" class="streak-identity-text is-loading">
                 No identity saved yet.
               </div>
             </div>
