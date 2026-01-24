@@ -518,7 +518,7 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 
 /* No Fap + No Corn specific */
 #identityInput{
-  min-height: 300px;
-  max-height: 320px;
+  min-height: 200px;
+  max-height: 300px;
   line-height: 1.75;
 }
