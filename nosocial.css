@@ -515,3 +515,10 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 @media (max-width:680px){
   #lastLogInput{ min-height: 380px; }
 }
+
+/* No Fap + No Corn specific */
+#identityInput{
+  min-height: 300px;
+  max-height: 520px;
+  line-height: 1.75;
+}
