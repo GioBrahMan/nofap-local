@@ -266,6 +266,7 @@ body::before{
   padding:12px;
   color:var(--ink);
   font-size:12px;
+  line-height:1.7;
 }
 
 /* ===================== */
