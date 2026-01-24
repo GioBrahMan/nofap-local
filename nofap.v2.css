@@ -258,7 +258,7 @@ body::before{
 
 .identity-textarea{
   width:100%;
-  min-height:180px;
+  min-height:240px;
   resize:vertical;
   border-radius:14px;
   border:1px solid var(--border-soft);
