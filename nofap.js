@@ -1,59 +1,25 @@
-// nofap.js — LOCAL ONLY (Monk Mode style)
-
 console.log("nofap.js loaded");
 
-// ===============================
-// UI ELEMENTS
-// ===============================
-const input = document.getElementById("nofapInput");
-
+/* =========================
+   ELEMENTS
+========================= */
+const input = document.getElementById("identityInput");
 const streakDayText = document.getElementById("streakDayText");
 const savedIdentityText = document.getElementById("savedIdentityText");
 const lastCheckInText = document.getElementById("lastCheckInText");
 const messageEl = document.getElementById("message");
+const charCount = document.getElementById("charCount");
+const yearNow = document.getElementById("yearNow");
 
 const checkInBtn = document.getElementById("checkInBtn");
 const saveBtn = document.getElementById("saveIdentityBtn");
 const resetBtn = document.getElementById("resetStreakBtn");
 
-// ===============================
-// CONSTANTS
-// ===============================
-const LS_KEY = "disciplineos_nofap_v1";
-const RATE_LIMIT_MS = 900;
+/* =========================
+   STORAGE
+========================= */
+const KEY = "disciplineos_nofap_local";
 
-let isProcessing = false;
-let lastActionAt = 0;
-
-// ===============================
-// HELPERS
-// ===============================
-function showMessage(text, type = "success") {
-  if (!messageEl) return;
-  messageEl.textContent = text;
-  messageEl.classList.remove("is-hidden", "success", "error");
-  messageEl.classList.add(type);
-  clearTimeout(showMessage._t);
-  showMessage._t = setTimeout(() => {
-    messageEl.classList.add("is-hidden");
-  }, 5000);
-}
-
-function normalize(s) {
-  return String(s ?? "").replace(/\r\n/g, "\n").trim();
-}
-
-function todayKey() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function timeNow() {
-  return new Date().toTimeString().slice(0, 8);
-}
-
-// ===============================
-// STORAGE
-// ===============================
 function defaultState() {
   return {
     identity: "",
@@ -65,95 +31,114 @@ function defaultState() {
 
 function load() {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEY)) || defaultState();
+    return JSON.parse(localStorage.getItem(KEY)) || defaultState();
   } catch {
     return defaultState();
   }
 }
 
 function save(state) {
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
+  localStorage.setItem(KEY, JSON.stringify(state));
 }
 
-// ===============================
-// RENDER (Monk Mode style)
-// ===============================
-function render(state) {
-  savedIdentityText.textContent =
-    state.identity || "No identity saved yet. Your first check-in will lock it in.";
-  savedIdentityText.classList.remove("is-loading");
+/* =========================
+   HELPERS
+========================= */
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function nowTime() {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function showMessage(text, type = "success") {
+  messageEl.textContent = text;
+  messageEl.classList.remove("is-hidden", "success", "error");
+  messageEl.classList.add(type);
+
+  clearTimeout(showMessage._t);
+  showMessage._t = setTimeout(() => {
+    messageEl.classList.add("is-hidden");
+  }, 3500);
+}
+
+/* =========================
+   RENDER
+========================= */
+function render() {
+  const state = load();
 
   streakDayText.textContent = `Day ${state.streak}`;
+
+  savedIdentityText.textContent =
+    state.identity || "No identity saved yet.";
+  savedIdentityText.classList.remove("is-loading");
 
   lastCheckInText.textContent = state.lastDate
     ? `Last Check-In: ${state.lastDate} · ${state.lastTime}`
     : "Last Check-In: —";
+
+  charCount.textContent = `${input.value.length}/2000`;
+  yearNow.textContent = new Date().getFullYear();
 }
 
-// ===============================
-// GUARD
-// ===============================
-async function guarded(fn) {
-  const now = Date.now();
-  if (isProcessing || now - lastActionAt < RATE_LIMIT_MS) return;
-  lastActionAt = now;
-  isProcessing = true;
-  try {
-    await fn();
-  } finally {
-    isProcessing = false;
+/* =========================
+   ACTIONS
+========================= */
+saveBtn.onclick = () => {
+  const text = input.value.trim();
+  if (!text) {
+    showMessage("Type an identity statement first.", "error");
+    return;
   }
-}
 
-// ===============================
-// ACTIONS
-// ===============================
-saveBtn.onclick = () =>
-  guarded(() => {
-    const text = normalize(input.value);
-    if (!text) {
-      showMessage("Type an identity statement first.", "error");
-      return;
-    }
+  const state = load();
+  state.identity = text;
+  save(state);
+  render();
+  showMessage("Identity saved.");
+};
 
-    const state = load();
-    state.identity = text;
-    save(state);
-    render(state);
-    showMessage("Identity saved.", "success");
-  });
+checkInBtn.onclick = () => {
+  const text = input.value.trim();
+  if (!text) {
+    showMessage("Type your identity before checking in.", "error");
+    return;
+  }
 
-checkInBtn.onclick = () =>
-  guarded(() => {
-    const state = load();
-    const text = normalize(input.value);
-    if (!text) {
-      showMessage("Type your identity before checking in.", "error");
-      return;
-    }
+  const state = load();
+  const today = todayKey();
 
-    const today = todayKey();
+  if (state.lastDate === today) {
+    showMessage("Already checked in today.");
+    return;
+  }
 
-    if (!state.identity) {
-      state.identity = text;
-      state.streak = 1;
-    } else {
-      if (normalize(state.identity) !== text) {
-        showMessage("Identity does not match saved statement.", "error");
-        return;
-      }
-      if (state.lastDate === today) {
-        showMessage("Already checked in today.", "success");
-        return;
-      }
-      state.streak += 1;
-    }
+  state.identity = text;
+  state.streak += 1;
+  state.lastDate = today;
+  state.lastTime = nowTime();
 
-    state.lastDate = today;
-    state.lastTime = timeNow();
-    save(state);
-    render(state);
-    showMessage(`Check-in logged. Day ${state.streak}.`, "success");
-  });
+  save(state);
+  render();
+  showMessage(`Check-in logged. Day ${state.streak}.`);
+};
 
-resetBtn.onclick
+resetBtn.onclick = () => {
+  localStorage.removeItem(KEY);
+  render();
+  showMessage("Streak reset.", "error");
+};
+
+/* =========================
+   EVENTS
+========================= */
+input.addEventListener("input", () => {
+  charCount.textContent = `${input.value.length}/2000`;
+});
+
+/* =========================
+   INIT
+========================= */
+render();
