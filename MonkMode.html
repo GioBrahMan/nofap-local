@@ -99,9 +99,30 @@ No snoozing alarms."
             </div>
 
             <div class="streak-main">
+              <div class="starterBox">
+                <div class="streak-label starterBox__label">Already have a streak?</div>
+
+                <div class="starterBox__row">
+                  <input 
+                    id="startingDayInput"
+                    class="starterBox__input"
+                    type="number"
+                    min="0"
+                    max="5000"
+                    placeholder="e.g. 14"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <button id="setStartingDayBtn" class="btn-subtle" type="button">Set</button>
+                </div>
+                <div class="starterBox__hint">
+                  One-time base setter. Locks after first check-in.
+                </div>
+              </div>
               <div class="streak-day">
                 <span class="flame">🧘‍♂️</span>
-                <span id="streakDayText" class="is-loading">Day 0</span>
+                <span id="streakDayText">Day 0</span>
               </div>
               <div class="streak-caption">Monk Mode</div>
             </div>

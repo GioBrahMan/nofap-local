@@ -15,6 +15,10 @@ const checkInBtn = document.getElementById("checkInBtn");
 const saveScriptBtn = document.getElementById("saveScriptBtn");
 const resetStreakBtn = document.getElementById("resetStreakBtn");
 
+// Starter box (mirrors NoFap)
+const startingDayInput = document.getElementById("startingDayInput");
+const setStartingDayBtn = document.getElementById("setStartingDayBtn");
+
 // ===============================
 // CONSTANTS / LIMITS
 // ===============================
@@ -54,6 +58,8 @@ function setButtonsDisabled(disabled) {
   saveScriptBtn && (saveScriptBtn.disabled = ds);
   resetStreakBtn && (resetStreakBtn.disabled = ds);
   monkInput && (monkInput.disabled = ds);
+
+  // do NOT disable starter setter here; we control it via baseLocked
 }
 
 // Prevent placeholder flash
@@ -95,25 +101,27 @@ function getTimeString() {
   const d = new Date();
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
-  const ss = String(d.getSeconds()).padStart(2, "0");
-  return `${hh}:${mm}:${ss}`;
+  return `${hh}:${mm}`;
 }
 function getPrettyDate(dateKey) {
   if (!dateKey) return "—";
   const [y, m, d] = String(dateKey).split("-").map(Number);
   const date = new Date(y, (m || 1) - 1, d || 1);
-  return date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 function formatTimeAmPm(timeStr) {
   if (!timeStr) return "—";
-  const parts = String(timeStr).split(":");
-  const hh = parseInt(parts[0], 10);
-  const mm = parts[1] ?? "00";
-  const ss = parts[2];
+  const [hhStr, mmStr] = String(timeStr).split(":");
+  const hh = parseInt(hhStr, 10);
+  const mm = mmStr ?? "00";
   if (Number.isNaN(hh)) return String(timeStr);
   const ampm = hh >= 12 ? "PM" : "AM";
   const hour12 = ((hh + 11) % 12) + 1;
-  return ss ? `${hour12}:${mm}:${ss} ${ampm}` : `${hour12}:${mm} ${ampm}`;
+  return `${hour12}:${mm} ${ampm}`;
 }
 
 // ===============================
@@ -125,6 +133,9 @@ function defaultState() {
     current_streak: 0,
     last_checkin_date: null,
     last_checkin_time: null,
+
+    // mirrors NoFap
+    baseLocked: false,
   };
 }
 function loadLocalState() {
@@ -162,10 +173,21 @@ function render(state) {
   if (lastCheckInText) {
     if (state.last_checkin_date) {
       const pretty = getPrettyDate(state.last_checkin_date);
-      const timePretty = state.last_checkin_time ? formatTimeAmPm(state.last_checkin_time) : "--:--";
+      const timePretty = state.last_checkin_time
+        ? formatTimeAmPm(state.last_checkin_time)
+        : "--:--";
       lastCheckInText.textContent = `Last Check-In: ${pretty} · ${timePretty}`;
     } else {
       lastCheckInText.textContent = "Last Check-In: —";
+    }
+  }
+
+  // Starter box lock (mirrors NoFap)
+  if (startingDayInput && setStartingDayBtn) {
+    startingDayInput.disabled = !!state.baseLocked;
+    setStartingDayBtn.disabled = !!state.baseLocked;
+    if (state.baseLocked) {
+      startingDayInput.placeholder = "Locked";
     }
   }
 
@@ -235,8 +257,8 @@ checkInBtn?.addEventListener("click", () =>
   guarded("checkIn", async () => {
     const state = loadLocalState();
 
-    const input = sanitizeForStorage(monkInput?.value ?? "", MAX_SCRIPT_LEN);
-    if (!input.trim()) {
+    const inputText = sanitizeForStorage(monkInput?.value ?? "", MAX_SCRIPT_LEN);
+    if (!inputText.trim()) {
       showMessage("Type your full Monk Mode script before checking in.", "error");
       return;
     }
@@ -244,27 +266,7 @@ checkInBtn?.addEventListener("click", () =>
     const todayKey = getTodayKey();
     const nowTime = getTimeString();
 
-    // First check-in locks script + starts Day 1
-    if (!String(state.protocol_rules || "").trim()) {
-      const next = {
-        ...state,
-        protocol_rules: input,
-        current_streak: 1,
-        last_checkin_date: todayKey,
-        last_checkin_time: nowTime,
-      };
-
-      if (!saveLocalState(next)) {
-        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
-        return;
-      }
-
-      render(next);
-      showMessage("Monk Mode script locked in. Day 1 has started.", "success");
-      return;
-    }
-
-    // Already checked in today -> update time only
+    // If already checked in today -> update time only
     if (state.last_checkin_date === todayKey) {
       const next = { ...state, last_checkin_time: nowTime };
       if (!saveLocalState(next)) {
@@ -276,8 +278,31 @@ checkInBtn?.addEventListener("click", () =>
       return;
     }
 
+    // First ever check-in: lock script if empty, and start streak if 0
+    if (!String(state.protocol_rules || "").trim()) {
+      const next = {
+        ...state,
+        protocol_rules: inputText,
+        current_streak: (Number(state.current_streak || 0) || 0) + 1,
+        last_checkin_date: todayKey,
+        last_checkin_time: nowTime,
+
+        // lock starter base after first check-in (mirrors NoFap)
+        baseLocked: true,
+      };
+
+      if (!saveLocalState(next)) {
+        showMessage("Could not save. Your browser may be blocking localStorage.", "error");
+        return;
+      }
+
+      render(next);
+      showMessage(`Monk Mode script locked in. Day ${next.current_streak} has started.`, "success");
+      return;
+    }
+
     // Must match script exactly (normalized)
-    if (normalize(input) !== normalize(state.protocol_rules)) {
+    if (normalize(inputText) !== normalize(state.protocol_rules)) {
       showMessage('This doesn’t match your saved Monk Mode script exactly. Use "Save / Update Script" if you changed it.', "error");
       return;
     }
@@ -288,6 +313,9 @@ checkInBtn?.addEventListener("click", () =>
       current_streak: nextStreak,
       last_checkin_date: todayKey,
       last_checkin_time: nowTime,
+
+      // lock starter base after first real check-in
+      baseLocked: true,
     };
 
     if (!saveLocalState(next)) {
@@ -311,6 +339,9 @@ resetStreakBtn?.addEventListener("click", () =>
       current_streak: 0,
       last_checkin_date: null,
       last_checkin_time: null,
+
+      // mirrors NoFap: full reset should unlock base setter again
+      baseLocked: false,
     };
 
     if (!saveLocalState(next)) {
@@ -319,7 +350,39 @@ resetStreakBtn?.addEventListener("click", () =>
     }
 
     render(next);
-    showMessage("Monk Mode streak reset to Day 0. Script still saved. Rebuild from zero.", "success");
+    showMessage("Monk Mode streak reset to Day 0. Script still saved. Base setter unlocked.", "success");
+  })
+);
+
+// StarterBox: Set Starting Day (mirrors NoFap)
+setStartingDayBtn?.addEventListener("click", () =>
+  guarded("setStartingDay", async () => {
+    const v = Number(startingDayInput?.value);
+    if (!Number.isFinite(v) || v < 0 || v > 5000) {
+      showMessage("Enter a valid number (0–5000).", "error");
+      return;
+    }
+
+    const state = loadLocalState();
+    if (state.baseLocked) {
+      showMessage("Base streak is locked.", "error");
+      return;
+    }
+
+    const next = {
+      ...state,
+      current_streak: Math.floor(v),
+      baseLocked: true,
+    };
+
+    if (!saveLocalState(next)) {
+      showMessage("Could not save. Your browser may be blocking localStorage.", "error");
+      return;
+    }
+
+    if (startingDayInput) startingDayInput.value = "";
+    render(next);
+    showMessage(`Starting streak set to Day ${next.current_streak}.`, "success");
   })
 );
 
