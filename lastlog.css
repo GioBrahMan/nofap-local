@@ -1,14 +1,19 @@
-#lastLogInput{
-  min-height: clamp(620px, 65vh, 900px);
-  max-height: clamp(720px, 80vh, 1100px);
-  resize: vertical;
-  line-height: 1.8;
-  scrollbar-gutter: stable;
+/* Last Log card should stretch vertically */
+
+.lastlog-card{
+  min-height: clamp(780px, 80vh, 1100px);
+  display: flex;
+  flex-direction: column;
 }
 
+/* Let textarea fill the card */
+.lastlog-card .identity-textarea{
+  flex: 1;
+}
+
+/* Mobile safety */
 @media (max-width:680px){
-  #lastLogInput{
-    min-height: clamp(480px, 70vh, 680px);
-    max-height: clamp(620px, 90vh, 900px);
+  .lastlog-card{
+    min-height: auto;
   }
 }
