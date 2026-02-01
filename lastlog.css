@@ -1,14 +1,14 @@
-/* Last Log card should stretch vertically */
-
+/* Last Log card stretch */
 .lastlog-card{
   min-height: clamp(780px, 80vh, 1100px);
   display: flex;
   flex-direction: column;
 }
 
-/* Let textarea fill the card */
+/* Let textarea grow fully inside the card */
 .lastlog-card .identity-textarea{
   flex: 1;
+  max-height: none;   /* 🔥 THIS removes the scroll trap */
 }
 
 /* Mobile safety */
