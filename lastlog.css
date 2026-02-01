@@ -1,6 +1,6 @@
 #lastLogInput{
-    min-height: 42vh;
-    max-height: 70vh;
+    min-height: clamp(420px, 55vh, 720px);
+    max-height: clamp(560px, 70vh, 900px);
     resize: vertical;
     line-height: 1.8;
     scrollbar-gutter: stable;
@@ -8,8 +8,8 @@
 
 @media (max-width:680px){
     #lastLogInput{
-        min-height: 48vh;
-        max-height: 75vh;
+        min-height: clamp(360px, 60vh, 520px);
+        max-height: clamp(520px, 80vh, 720px);
     }
 }
 
