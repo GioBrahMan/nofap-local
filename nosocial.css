@@ -504,17 +504,7 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   }
 }
 
-/* Last Log specific (inherits this file) */
-#lastLogInput{
-  min-height: 360px;
-  max-height: 640px;
-  resize: vertical;
-  line-height: 1.8;
-}
 
-@media (max-width:680px){
-  #lastLogInput{ min-height: 380px; }
-}
 
 /* No Fap + No Corn specific */
 #identityInput{

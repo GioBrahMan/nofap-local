@@ -1,0 +1,12 @@
+#lastLogInput{
+    min-height: 360px;
+    max-height: 640px;
+    resize: vertical;
+    line-height: 1.8;
+}
+
+@media (max-width:680px){
+    #lastLogInput{
+        min-height: 380px;
+    }
+}
