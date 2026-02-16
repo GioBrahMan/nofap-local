@@ -51,11 +51,40 @@ function normalize(s) {
 }
 
 function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
-function timeNow() {
-  return new Date().toTimeString().slice(0, 8);
+function nowTime() {
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
+function getPrettyDate(dateKey) {
+  if (!dateKey) return "—";
+  const [y, m, d] = String(dateKey).split("-").map(Number);
+  const date = new Date(y, (m || 1) - 1, d || 1);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+function formatTimeAmPm(timeStr) {
+  if (!timeStr) return "—";
+  const [hhStr, mmStr] = String(timeStr).split(":");
+  const hh = parseInt(hhStr, 10);
+  const mm = mmStr ?? "00";
+  if (Number.isNaN(hh)) return String(timeStr);
+  const ampm = hh >= 12 ? "PM" : "AM";
+  const hour12 = ((hh + 11) % 12) + 1;
+  return `${hour12}:${mm} ${ampm}`;
 }
 
 // ===============================
@@ -101,7 +130,7 @@ function render(state) {
   streakDayText.textContent = `Day ${Number(state.streak || 0)}`;
 
   lastCheckInText.textContent = state.lastDate
-    ? `Last Check-In: ${state.lastDate} · ${state.lastTime}`
+    ? `Last Check-In: ${getPrettyDate(state.lastDate)} · ${formatTimeAmPm(state.lastTime)}`
     : "Last Check-In: —";
 
   // Starter box lock (mirrors NoFap)
@@ -185,7 +214,7 @@ checkInBtn.onclick = () =>
     }
 
     state.lastDate = today;
-    state.lastTime = timeNow();
+    state.lastTime = nowTime();
 
     // lock starter base after first check-in
     state.baseLocked = true;

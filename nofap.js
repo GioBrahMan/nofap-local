@@ -49,14 +49,42 @@ function save(state) {
    HELPERS
 ========================= */
 function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
+
 function nowTime() {
-  return new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
+  const d = new Date();
+  const hh = String(d.getHours()).padStart(2, "0");
+  const mm = String(d.getMinutes()).padStart(2, "0");
+  return `${hh}:${mm}`;
+
+}
+
+function getPrettyDate(dateKey) {
+  if (!dateKey) return "—";
+  const [y, m, d] = String(dateKey).split("-").map(Number);
+  const date = new Date(y, (m || 1) - 1, d || 1);
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
+}
+
+function formatTimeAmPm(timeStr) {
+  if (!timeStr) return "—";
+  const [hhStr, mmStr] = String(timeStr).split(":");
+  const hh = parseInt(hhStr, 10);
+  const mm = mmStr ?? "00";
+  if (Number.isNaN(hh)) return String(timeStr);
+  const ampm = hh >= 12 ? "PM" : "AM";
+  const hour12 = ((hh + 11) % 12) + 1;
+  return `${hour12}:${mm} ${ampm}`;
 }
 
 function showMessage(text, type = "success") {
@@ -83,7 +111,7 @@ function render() {
   savedIdentityText.classList.remove("is-loading");
 
   lastCheckInText.textContent = state.lastDate
-    ? `Last Check-In: ${state.lastDate} · ${state.lastTime}`
+    ? `Last Check-In: ${getPrettyDate(state.lastDate)} · ${formatTimeAmPm(state.lastTime)}`
     : "Last Check-In: —";
 
   charCount.textContent = `${input.value.length}/2000`;
