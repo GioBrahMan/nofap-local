@@ -42,7 +42,7 @@
     <main role="main">
       <section>
         <div class="section-label">Module 02 · Healthy Social Media Usage</div>
-        <h1 class="section-heading">Healthy Social Media Identity Streak</h1>
+        <h1 class="section-heading">Healthy Social Media Usage</h1>
 
         <p class="section-sub">
           Local-only version. Your data never leaves your device.
@@ -59,12 +59,27 @@
             </div>
 
             <p class="identity-card-text">
-              List the creators you intentionally allow yourself to watch.
-              The rule is simple: 10 minutes a day or less.
+              You are allowed one intentional social media window per day (10 minutes or less). Outside of this window, opening social media counts as a slip and resets your streak.
             </p>
 
+            <div class="identity-card-text">
+              You must define:
+            </div>
+              <ul class="identity-rules">
+                <li>which creators you are allowed to watch</li>
+                <li>which platforms you will watch them on</li>
+                <li>the daily event when viewing is allowed</li>
+                <li>the device you will use</li>
+                <li>the interrupt action you will perform when an urge appears</li>
+              </ul>
+
+            <p class="identity-card-text">
+              <strong>If it is not scheduled, approved, and intentional — you do not open the app.</strong>
+            </p>
+            
+
             <div class="soft-divider"></div>
-            <div class="identity-meta">Creators you choose to watch</div>
+            <div class="identity-meta">Content creators you choose to watch</div>
 
             <textarea
               class="identity-textarea"
@@ -72,12 +87,13 @@
               autocomplete="off"
               spellcheck="false"
               placeholder="Example:
-Matan Even 
-Penguinz0"
+Matan Even (I will only watch Matan on Youtube) 
+Jeff Nippard (I will only watch Jeff on TikTok)
+"
             ></textarea>
 
             <div class="soft-divider"></div>
-            <div class="identity-meta">Identity Statement</div>
+            <div class="identity-meta">Healthy Social Media Usage Contract</div>
 
             <textarea
               class="identity-textarea"
@@ -86,13 +102,16 @@ Penguinz0"
               autocomplete="off"
               spellcheck="false"
               placeholder="VERY IMPORTANT: 
-(Map out when exactly you will use up your 10 minutes a day or less of social media consumption.)
-I will use up my 10 minutes while preparing/drinking my protein shake before the gym. After the timer is up, I will completely detach from social media."
+Example:
+
+THE EVENT: After I finish my workout while drinking my protein shake.
+THE VIEWING DEVICE: I will use my smartphone to use up my 10 minutes a day (max) and then close the app.
+MY INTERRUPT ACTION: Any time I feel the urge to open social media, I will snap my fingers twice."
             ></textarea>
 
             <div class="identity-hint">
               • Press <strong>CHECK IN</strong> once per day<br/>
-              • Press <strong>SAVE / UPDATE IDENTITY</strong> to edit without losing your streak<br/>
+              • Press <strong>SAVE / UPDATE </strong> to edit without losing your streak<br/>
               • Press <strong>I SLIPPED TODAY</strong> to reset your streak
             </div>
 
@@ -145,16 +164,16 @@ I will use up my 10 minutes while preparing/drinking my protein shake before the
             </div>
 
             <div class="streak-sites-box">
-              <div class="streak-sites-label">Allowed Creators</div>
+              <div class="streak-sites-label">Content Creators You Choose To Watch</div>
               <div class="streak-sites-text is-loading" id="savedSitesText">
-                No creators saved yet.
+                No content creators saved yet.
               </div>
             </div>
 
             <div class="streak-identity-box">
-              <div class="streak-identity-label">Saved Identity</div>
+              <div class="streak-identity-label">Saved Contract</div>
               <div class="streak-identity-text is-loading" id="savedIdentityText">
-                No identity saved yet.
+                No healthy social media usage contract saved yet.
               </div>
             </div>
 

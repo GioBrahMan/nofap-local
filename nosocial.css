@@ -544,3 +544,14 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   color:var(--muted);
   line-height:1.5;
 }
+
+.identity-rules {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 18px;
+  line-height: 1.6;
+}
+
+.identity-rules li {
+  margin-bottom: 4px;
+}
