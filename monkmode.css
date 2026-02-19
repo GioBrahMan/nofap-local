@@ -256,7 +256,7 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 
 .identity-textarea{
   width:100%;
-  min-height:260px;
+  min-height:220px;
   max-height:480px;
   resize:vertical;
   border-radius:14px;
