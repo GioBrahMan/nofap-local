@@ -555,3 +555,8 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 .identity-rules li {
   margin-bottom: 4px;
 }
+
+#socialInput {
+  min-height: 240px;
+  max-height: 420px;
+}
