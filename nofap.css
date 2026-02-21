@@ -676,7 +676,3 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   letter-spacing: 0.04em;
 }
 
-.identity-card:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 3px;
-}
