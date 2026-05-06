@@ -624,7 +624,7 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
 
 .operator-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
