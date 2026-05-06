@@ -277,9 +277,6 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   color:rgba(190,195,210,0.92);
 }
 
-.identity-textarea{
-  letter-spacing:0.01em;
-}
 
 .identity-meta{
   font-size:10px;
