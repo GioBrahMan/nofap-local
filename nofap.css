@@ -271,10 +271,14 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   outline:none;
   box-shadow:inset 0 0 0 1px rgba(0,0,0,0.7);
   white-space:pre-wrap;
+  letter-spacing:0.01em;
 }
 
 .identity-textarea::placeholder{
   color:rgba(190,195,210,0.92);
+  font-size:15px;
+  line-height:1.9;
+  letter-spacing:0.01em;
 }
 
 
