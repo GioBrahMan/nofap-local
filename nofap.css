@@ -686,3 +686,10 @@ section{ padding:36px 0; border-top:1px solid rgba(255,255,255,0.04); }
   letter-spacing: 0.04em;
 }
 
+#identityInput,
+#identityInput::placeholder {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+}
