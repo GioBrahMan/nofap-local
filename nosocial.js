@@ -5,12 +5,10 @@ console.log("nosocial.js loaded");
 // ===============================
 // UI ELEMENTS
 // ===============================
-const sitesInput = document.getElementById("sitesInput");
 const input = document.getElementById("socialInput");
 
 const streakDayText = document.getElementById("streakDayText");
 const savedIdentityText = document.getElementById("savedIdentityText");
-const savedSitesText = document.getElementById("savedSitesText");
 const lastCheckInText = document.getElementById("lastCheckInText");
 const messageEl = document.getElementById("message");
 
@@ -93,7 +91,6 @@ function formatTimeAmPm(timeStr) {
 function defaultState() {
   return {
     identity: "",
-    creators: [],
     streak: 0,
     lastDate: null,
     lastTime: null,
@@ -120,12 +117,8 @@ function save(state) {
 // ===============================
 function render(state) {
   savedIdentityText.textContent =
-    state.identity || "No identity saved yet. Your first check-in will lock it in.";
-  savedIdentityText.classList.remove("is-loading");
-
-  savedSitesText.textContent =
-    state.creators.length ? state.creators.join("\n") : "No creators saved yet.";
-  savedSitesText.classList.remove("is-loading");
+  state.identity || "No statement saved yet.";
+savedIdentityText.classList.remove("is-loading");
 
   streakDayText.textContent = `Day ${Number(state.streak || 0)}`;
 
@@ -162,29 +155,27 @@ async function guarded(fn) {
 saveBtn.onclick = () =>
   guarded(() => {
     const identity = normalize(input.value);
+
     if (!identity) {
-      showMessage("Type an identity statement first.", "error");
+      showMessage("Type your no social media statement first.", "error");
       return;
     }
 
     const state = load();
     state.identity = identity;
-    state.creators = normalize(sitesInput.value)
-      .split("\n")
-      .map((x) => x.trim())
-      .filter(Boolean);
 
     save(state);
     render(state);
-    showMessage("Identity + creators saved.", "success");
+    showMessage("Statement saved.", "success");
   });
 
 checkInBtn.onclick = () =>
   guarded(() => {
     const state = load();
     const text = normalize(input.value);
+
     if (!text) {
-      showMessage("Type your identity before checking in.", "error");
+      showMessage("Type your no social media statement before checking in.", "error");
       return;
     }
 
@@ -195,28 +186,16 @@ checkInBtn.onclick = () =>
       return;
     }
 
-    // If first time, lock in identity + creators
     if (!state.identity) {
       state.identity = text;
-      state.creators = normalize(sitesInput.value)
-        .split("\n")
-        .map((x) => x.trim())
-        .filter(Boolean);
-
-      // If streak is 0, start at 1; if you set a base earlier, this will go base+1
-      state.streak = Number(state.streak || 0) + 1;
-    } else {
-      if (normalize(state.identity) !== text) {
-        showMessage("Identity does not match saved statement.", "error");
-        return;
-      }
-      state.streak = Number(state.streak || 0) + 1;
+    } else if (normalize(state.identity) !== text) {
+      showMessage("Statement does not match saved statement.", "error");
+      return;
     }
 
+    state.streak = Number(state.streak || 0) + 1;
     state.lastDate = today;
     state.lastTime = nowTime();
-
-    // lock starter base after first check-in
     state.baseLocked = true;
 
     save(state);
